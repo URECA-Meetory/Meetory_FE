@@ -1,7 +1,7 @@
 import Gauge from "./Gauge.jsx";
 
 export default function TeamCard({ team, onOpen, onApply, applyDisabled }) {
-  const isOpen = team.status === "모집중";
+  const isOpen = team.status === "모집중" && team.currentMembers < team.maxMembers;
 
   return (
     <div className="team-card" onClick={() => onOpen(team.teamId)}>
@@ -9,7 +9,7 @@ export default function TeamCard({ team, onOpen, onApply, applyDisabled }) {
         <div className="title-row">
           <span className="title">{team.title}</span>
           <span className="badge badge-cat">{team.category}</span>
-          <span className={`badge ${isOpen ? "badge-open" : "badge-closed"}`}>{team.status}</span>
+          <span className={`badge ${isOpen ? "badge-open" : "badge-closed"}`}>{isOpen ? team.status : "모집완료"}</span>
         </div>
         <div className="summary">{team.summary}</div>
         <div className="meta">
