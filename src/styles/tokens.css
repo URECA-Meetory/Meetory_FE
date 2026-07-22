@@ -1,5 +1,5 @@
 :root {
-  /* ---- color: dark study-board base + warm pinned-card paper ---- */
+  /* ---- color: dark study-board base + panel surfaces ---- */
   --bg: #10161d;
   --bg-soft: #151c25;
   --surface: #1a222c;
@@ -7,30 +7,30 @@
   --line: rgba(237, 234, 224, 0.1);
   --line-strong: rgba(237, 234, 224, 0.18);
 
-  --paper: #f6f1e6;
-  --paper-soft: #efe8d8;
-  --ink: #201c14;
-  --ink-soft: #5a5240;
+  /* 패널(카드/모달) 배경 - 전체 배경톤에 맞춘 어두운 계열로 변경 */
+  --paper: #1b2330;
+  --paper-soft: #222c3a;
+  --ink: #ece7da;
+  --ink-soft: #9aa1ac;
 
   --text: #ece7da;
   --text-soft: #9aa1ac;
   --text-faint: #6b7280;
 
-  --accent: #e3a73a;       /* pin gold — 모집중 / primary action */
+  --accent: #e3a73a;
   --accent-strong: #c98c22;
   --accent-ink: #2a1d05;
-  --jade: #4fa98c;         /* 승인 / 완료 */
-  --jade-soft: rgba(79, 169, 140, 0.16);
-  --coral: #e2634f;        /* 거절 / 에러 */
-  --coral-soft: rgba(226, 99, 79, 0.16);
-  --sky: #5b8dd6;          /* 정보 뱃지 */
+  --jade: #4fa98c;
+  --jade-soft: rgba(79, 169, 140, 0.18);
+  --coral: #e2634f;
+  --coral-soft: rgba(226, 99, 79, 0.18);
+  --sky: #5b8dd6;
+  --sky-soft: rgba(91, 141, 214, 0.2);
 
-  /* ---- type ---- */
   --font-display: "Fraunces", "Noto Serif KR", serif;
   --font-body: "Pretendard Variable", "Pretendard", -apple-system, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* ---- shape / motion ---- */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
