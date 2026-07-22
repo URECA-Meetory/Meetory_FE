@@ -72,15 +72,17 @@ export const authApi = {
 // ---------------- Teams ----------------
 export const teamApi = {
   list: () => request("/teams"),
+  myTeams: () => request("/teams/my", { auth: true }),
   detail: (teamId) => request(`/teams/${teamId}`),
   create: (payload) => request("/teams", { method: "POST", body: payload, auth: true }),
   apply: (teamId) => request(`/teams/${teamId}/apply`, { method: "POST", auth: true }),
-  members: (teamId) => request(`/teams/${teamId}/members`),
+  members: (teamId) => request(`/teams/${teamId}/members`, { auth: true }),
   applications: (teamId) => request(`/teams/${teamId}/applications`, { auth: true }),
   approve: (teamId, memberId) =>
     request(`/teams/${teamId}/applications/${memberId}/approve`, { method: "POST", auth: true }),
   reject: (teamId, memberId) =>
     request(`/teams/${teamId}/applications/${memberId}/reject`, { method: "POST", auth: true }),
+  leave: (teamId) => request(`/teams/${teamId}/leave`, { method: "DELETE", auth: true }),
 };
 
 export { ApiError };

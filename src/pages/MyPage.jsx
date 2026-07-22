@@ -16,7 +16,7 @@ export default function MyPage() {
 
   return (
     <main className="view">
-      <div className="view-head">
+      <div className="view-head center-head">
         <div>
           <div className="eyebrow">My Page</div>
           <h1>마이페이지</h1>
