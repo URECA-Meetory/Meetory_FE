@@ -5,7 +5,8 @@ import { messageApi, ApiError } from "../api/client.js";
 import { useToast } from "../context/ToastContext.jsx";
 
 // 쪽지 클릭 시 뜨는 대화 모달. 모임 관리 모달과 동일한 Modal 컴포넌트를 사용하고,
-// 내부는 카카오톡처럼 말풍선(보낸 사람 닉네임 + 내용 + 시간)으로 구성한다.
+// 내부는 카카오톡처럼 말풍선(닉네임 → 말풍선 → 말풍선 바깥 오른쪽 아래 작은 시간)으로 구성한다.
+// 상대가 보낸 쪽지는 왼쪽, 내가 보낸 쪽지는 오른쪽에 배치한다.
 export default function MessageThreadPanel({ threadId, onClose, onChanged }) {
   const toast = useToast();
   const [detail, setDetail] = useState(null);
@@ -83,11 +84,8 @@ export default function MessageThreadPanel({ threadId, onClose, onChanged }) {
               <div key={m.messageId} className={`chat-row ${m.mine ? "mine" : "theirs"}`}>
                 <div className="chat-bubble-wrap">
                   <div className="chat-sender-name">{m.mine ? "나" : m.senderNickname}</div>
-                  <div className="chat-bubble-line">
-                    {!m.mine && <div className="chat-time">{formatTime(m.createdAt)}</div>}
-                    <div className="chat-bubble">{m.content}</div>
-                    {m.mine && <div className="chat-time">{formatTime(m.createdAt)}</div>}
-                  </div>
+                  <div className="chat-bubble">{m.content}</div>
+                  <div className="chat-time">{formatTime(m.createdAt)}</div>
                 </div>
               </div>
             ))}

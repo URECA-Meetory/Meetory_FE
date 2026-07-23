@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Mail, MailOpen } from "lucide-react";
+import { Mail, MailOpen, ChevronRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useToast } from "../context/ToastContext.jsx";
 import { messageApi, ApiError } from "../api/client.js";
@@ -100,7 +100,7 @@ export default function MyPage() {
 
           {!loading && !error && (
             <>
-              <div className="inbox-section">
+              <div className={`inbox-section ${inbox.unread.length > 0 ? "has-unread" : ""}`}>
                 <div className="inbox-section-label">
                   <Mail size={13} /> 안 읽은 쪽지 ({inbox.unread.length})
                 </div>
@@ -115,7 +115,10 @@ export default function MyPage() {
                             <span className="msg-card-title">{t.title}</span>
                             <span className="badge badge-cat">{t.teamTitle}</span>
                           </div>
-                          <span className="dot" />
+                          <div className="msg-card-right">
+                            <span className="dot" />
+                            <ChevronRight size={16} className="msg-card-arrow" />
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -142,6 +145,9 @@ export default function MyPage() {
                           <div className="msg-card-body">
                             <span className="msg-card-title">{t.title}</span>
                             <span className="badge badge-cat">{t.teamTitle}</span>
+                          </div>
+                          <div className="msg-card-right">
+                            <ChevronRight size={16} className="msg-card-arrow" />
                           </div>
                         </div>
                       ))}

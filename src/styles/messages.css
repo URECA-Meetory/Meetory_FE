@@ -4,17 +4,17 @@
    - tokens.css 에서 정의된 색상/폰트 변수를 그대로 재사용해 기존 테마와 통일감을 줍니다.
    ========================================================================= */
 
-/* ---------------------------------- 마이페이지 그리드 (내 정보 + 쪽지함, 좌우 반반) ---------------------------------- */
+/* ---------------------------------- 마이페이지 그리드 (내 정보 + 쪽지함, 좌우로 넉넉하게 분리) ---------------------------------- */
 .mypage-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  max-width: 960px;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  gap: 48px;
+  max-width: 980px;
   margin: 0 auto;
   align-items: start;
 }
-@media (max-width: 760px) {
-  .mypage-grid { grid-template-columns: 1fr; }
+@media (max-width: 860px) {
+  .mypage-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 .mypage-grid .mypage-card { max-width: none; margin: 0; }
 
@@ -22,31 +22,53 @@
 .inbox-head { display: flex; align-items: center; gap: 8px; color: var(--accent); margin-bottom: 6px; }
 .inbox-head h2 { font-family: var(--font-display); font-size: 18px; margin: 0; color: var(--ink); }
 
-.inbox-section { margin-top: 14px; }
+/* ---------------------------------- 안읽음 / 읽음 섹션 박스 ---------------------------------- */
+.inbox-section {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+}
+.inbox-section.has-unread {
+  border-color: rgba(227, 167, 58, 0.3);
+  background: rgba(227, 167, 58, 0.04);
+}
 .inbox-section-label {
   display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700;
-  color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px;
+  color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px;
 }
 
-/* ---------------------------------- 쪽지 카드 리스트 (모임 관리 카드와 같은 톤) ---------------------------------- */
+/* ---------------------------------- 쪽지 카드 리스트 (모임 관리 카드처럼) ---------------------------------- */
 .msg-list { display: flex; flex-direction: column; gap: 8px; }
 .msg-card {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  background: rgba(255, 255, 255, 0.04); border: 1px solid transparent; border-radius: 10px;
-  padding: 11px 14px; cursor: pointer;
-  transition: background .15s var(--ease), border-color .15s var(--ease), transform .15s var(--ease);
+  background: var(--paper); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px;
+  padding: 13px 16px; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease), border-color .15s var(--ease);
 }
-.msg-card:hover { background: rgba(255, 255, 255, 0.09); transform: translateY(-1px); }
-.msg-card.unread { background: rgba(227, 167, 58, 0.12); border-color: rgba(227, 167, 58, 0.35); }
+.msg-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+  border-color: var(--accent-border, rgba(227,167,58,0.4));
+}
+.msg-card.unread {
+  border-color: rgba(227, 167, 58, 0.5);
+  background: linear-gradient(180deg, rgba(227,167,58,0.08), var(--paper) 60%);
+}
 .msg-card-body { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .msg-card-title {
-  font-size: 13.5px; font-weight: 600; color: var(--ink);
+  font-size: 13.5px; font-weight: 700; color: var(--ink);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px;
 }
+.msg-card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .msg-card .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.msg-card-arrow { color: var(--ink-soft); font-size: 15px; opacity: .6; transition: transform .15s var(--ease); }
+.msg-card:hover .msg-card-arrow { transform: translateX(2px); opacity: 1; color: var(--accent); }
 
 .btn-more {
-  margin-top: 8px; width: 100%; padding: 9px; border-radius: 8px;
+  margin-top: 10px; width: 100%; padding: 9px; border-radius: 8px;
   border: 1px dashed var(--line-strong); background: transparent; color: var(--text-soft);
   font-size: 12.5px; cursor: pointer; transition: all .15s var(--ease);
 }
@@ -72,11 +94,11 @@
 
 /* ---------------------------------- 쪽지 대화 모달 (Modal 컴포넌트 내부, 카카오톡 스타일) ---------------------------------- */
 .chat-body-inline {
-  max-height: 340px;
+  max-height: 360px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   margin-top: 14px;
   padding: 4px 2px;
 }
@@ -85,20 +107,23 @@
 .chat-row.theirs { justify-content: flex-start; }
 .chat-row.mine { justify-content: flex-end; }
 
-.chat-bubble-wrap { display: flex; flex-direction: column; gap: 4px; max-width: 78%; }
+.chat-bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  max-width: 76%;
+}
+.chat-row.theirs .chat-bubble-wrap { align-items: flex-start; }
 .chat-row.mine .chat-bubble-wrap { align-items: flex-end; }
 
 .chat-sender-name {
-  font-size: 11px; color: var(--ink-soft); font-family: var(--font-mono); padding: 0 2px;
+  font-size: 11.5px; font-weight: 600; color: var(--ink-soft);
+  padding: 0 2px; margin-bottom: 4px;
 }
 
-.chat-bubble-line { display: flex; align-items: flex-end; gap: 6px; }
-.chat-row.mine .chat-bubble-line { flex-direction: row-reverse; }
-
 .chat-bubble {
-  padding: 9px 13px; border-radius: 16px; font-size: 13.5px; line-height: 1.5;
+  padding: 10px 14px; border-radius: 16px; font-size: 13.5px; line-height: 1.55;
   white-space: pre-wrap; word-break: break-word;
-  background: rgba(255, 255, 255, 0.06); color: var(--ink);
+  background: rgba(255, 255, 255, 0.07); color: var(--ink);
   border-bottom-left-radius: 4px;
 }
 .chat-row.mine .chat-bubble {
@@ -106,7 +131,16 @@
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 4px;
 }
-.chat-time { font-size: 10px; color: var(--ink-soft); font-family: var(--font-mono); white-space: nowrap; }
+
+/* 말풍선 '바깥', 오른쪽 아래에 작게 표시되는 시간 */
+.chat-time {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+  align-self: flex-end;
+  padding: 0 3px;
+}
 
 .chat-input-row {
   display: flex; align-items: center; gap: 8px;
