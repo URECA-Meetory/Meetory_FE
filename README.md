@@ -112,7 +112,7 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 - 팀원 목록 조회
 - 정원 게이지 표시
 - 모임 신청
-- 리더 전용 신청 승인 / 거절
+
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" />
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" />
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" />
@@ -125,6 +125,13 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 
 ---
 
+## 모임 모집
+- 리더 전용 신청 승인 / 거절
+
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/db98d4dd-e169-4d79-a251-01772789781c" />
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/164236c2-134d-4bf0-8be4-9f5bb6b7771e" />
+
+
 ## 마이페이지 & 쪽지함
 
 - 로그인한 사용자 정보 조회
@@ -132,7 +139,9 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 - 안 읽은 쪽지
 - 읽은 쪽지
 - 쪽지 송신 및 수신 기능
-<img width="1917" height="907" alt="image" src="https://github.com/user-attachments/assets/68281801-bfbb-4328-9501-2e0c33c39357" />
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/24cceae5-727b-460e-9f2e-bf3dcbadc98d" />
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/abe46b35-f215-4e0a-ae3b-245b7cfdaabc" />
+
 
 ---
 
