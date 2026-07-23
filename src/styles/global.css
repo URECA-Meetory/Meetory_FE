@@ -358,6 +358,11 @@ main.view { flex: 1; padding: 32px 28px 80px; max-width: 1080px; width: 100%; ma
 .user-menu-dropdown-inner button.danger:hover { background: var(--coral-soft); }
 
 /* ---------------------------------- 확인 모달 (로그아웃 / 탈퇴) ---------------------------------- */
-.confirm-card { max-width: 340px; text-align: center; }
+.confirm-card {
+  max-width: 340px;
+  text-align: center;
+  margin-top: 76px;
+  align-self: flex-start;
+}
 .confirm-card .modal-title { padding-right: 0; margin-bottom: 20px; }
 .confirm-card .modal-actions { justify-content: center; margin-top: 0; }
