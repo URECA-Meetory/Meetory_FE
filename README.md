@@ -84,7 +84,7 @@ Spring Boot Backend와 REST API를 통해 통신하며 모임 생성, 참여, �
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/abe46b35-f215-4e0a-ae3b-245b7cfdaabc" />
 
 ---
-## 👥 Team Members
+## 👥 팀 구성
 
 ### 👤 이수현
 - **담당**
