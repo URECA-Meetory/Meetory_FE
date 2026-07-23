@@ -9,7 +9,7 @@ import TeamManagePage from "./pages/TeamManagePage.jsx";
 import UserMenu from "./components/UserMenu.jsx";
 
 const TABS = [
-  { key: "teams", label: "팀 매칭" },
+  { key: "teams", label: "모임 모집" },
   { key: "board", label: "게시판" },
 ];
 
@@ -34,7 +34,7 @@ function Shell() {
       <header className="topbar">
         <div className="brand">
           <span className="wordmark">Meetory</span>
-          <span className="tagline">MEETUP MATCHING</span>
+          <span className="tagline">MEETUP Story</span>
         </div>
 
         <nav className="tabs">

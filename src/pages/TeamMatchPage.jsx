@@ -69,7 +69,7 @@ export default function TeamMatchPage() {
     <main className="view">
       <div className="view-head">
         <div>
-          <div className="eyebrow">Team Matching</div>
+          <div className="eyebrow">Now recruiting</div>
           <h1>모집중인 모임</h1>
           <p className="sub">관심 있는 모임의 설명을 눌러 자세히 살펴보세요.</p>
         </div>

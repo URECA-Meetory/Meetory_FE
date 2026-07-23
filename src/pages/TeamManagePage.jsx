@@ -29,7 +29,7 @@ export default function TeamManagePage() {
     <main className="view">
       <div className="view-head center-head">
         <div>
-          <div className="eyebrow">My Teams</div>
+          <div className="eyebrow">My Meetup</div>
           <h1>모임 관리</h1>
           <p className="sub">내가 속한 모임의 멤버와 신청을 관리하세요.</p>
         </div>
@@ -47,7 +47,7 @@ export default function TeamManagePage() {
         {!loading && !error && teams.length === 0 && (
           <div className="empty-state">
             <div className="glyph">＋</div>
-            아직 속한 모임이 없습니다. 팀 매칭에서 관심있는 모임에 신청해보세요.
+            아직 속한 모임이 없습니다. 모임 모집에서 관심있는 모임에 신청해보세요.
           </div>
         )}
 
