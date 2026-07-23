@@ -5,7 +5,7 @@ import { teamApi, ApiError } from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useToast } from "../context/ToastContext.jsx";
 
-export default function TeamDetailModal({ teamId, onClose, onChanged }) {
+export default function TeamDetailModal({ teamId, onClose, onChanged, onInquiry }) {
   const { user } = useAuth();
   const toast = useToast();
 
@@ -54,6 +54,14 @@ export default function TeamDetailModal({ teamId, onClose, onChanged }) {
     }
   }
 
+  function handleInquiry() {
+    if (!user) {
+      setApplyMsg({ ok: false, text: "로그인 후 문의할 수 있습니다." });
+      return;
+    }
+    onInquiry(teamId, detail.title);
+  }
+
   return (
     <Modal onClose={onClose}>
       {loading && (
@@ -92,13 +100,18 @@ export default function TeamDetailModal({ teamId, onClose, onChanged }) {
             ) : (
               <>
                 {applyMsg && <div className={`inline-msg ${applyMsg.ok ? "ok" : "err"}`}>{applyMsg.text}</div>}
-                <button
-                  className="btn btn-primary"
-                  disabled={detail.status !== "모집중" || applying}
-                  onClick={handleApply}
-                >
-                  {applying ? "신청 중..." : detail.status === "모집중" ? "신청하기" : "모집 마감"}
-                </button>
+                <div className="modal-actions-row">
+                  <button type="button" className="btn btn-inquiry" onClick={handleInquiry}>
+                    문의하기
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    disabled={detail.status !== "모집중" || applying}
+                    onClick={handleApply}
+                  >
+                    {applying ? "신청 중..." : detail.status === "모집중" ? "신청하기" : "모집 마감"}
+                  </button>
+                </div>
               </>
             )}
           </div>

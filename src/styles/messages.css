@@ -1,0 +1,144 @@
+/* =========================================================================
+   모임장 문의(쪽지) 기능 전용 스타일
+   - global.css 상단에 @import "./messages.css"; 한 줄만 추가하면 됩니다.
+   - tokens.css 에서 정의된 색상/폰트 변수를 그대로 재사용해 기존 테마와 통일감을 줍니다.
+   ========================================================================= */
+
+/* ---------------------------------- 마이페이지 그리드 (내 정보 + 받은 쪽지) ---------------------------------- */
+.mypage-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .mypage-grid { grid-template-columns: 1fr; }
+}
+.mypage-grid .mypage-card { max-width: none; margin: 0; }
+
+.inbox-card { display: flex; flex-direction: column; gap: 4px; }
+.inbox-head { display: flex; align-items: center; gap: 8px; color: var(--accent); margin-bottom: 6px; }
+.inbox-head h2 { font-family: var(--font-display); font-size: 18px; margin: 0; color: var(--ink); }
+
+.inbox-section { margin-top: 14px; }
+.inbox-section-label {
+  display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700;
+  color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px;
+}
+.inbox-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.inbox-item {
+  display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04); cursor: pointer; transition: background .15s var(--ease);
+}
+.inbox-item:hover { background: rgba(255, 255, 255, 0.09); }
+.inbox-item.unread {
+  background: rgba(227, 167, 58, 0.12);
+  border: 1px solid rgba(227, 167, 58, 0.35);
+}
+.inbox-item .dot { width: 7px; height: 7px; margin-top: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.inbox-item-body { min-width: 0; flex: 1; }
+.inbox-item-title { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+.inbox-item-meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; font-family: var(--font-mono); }
+.inbox-item-preview {
+  font-size: 12.5px; color: var(--ink-soft); margin-top: 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ---------------------------------- 팀 카드 / 상세 팝업 - 문의하기 버튼 ---------------------------------- */
+.side-actions { display: flex; gap: 6px; }
+.modal-actions-row { display: flex; gap: 10px; }
+.btn-inquiry {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--text-soft);
+}
+.btn-inquiry:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------------------------------- 문의하기(쪽지 최초 전송) 모달 ---------------------------------- */
+.inquiry-target {
+  font-size: 12.5px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
+
+/* ---------------------------------- 쪽지 채팅형 패널 (카카오톡 / 인스타 DM 스타일) ---------------------------------- */
+.chat-overlay {
+  position: fixed; inset: 0; z-index: 60; background: rgba(8, 10, 14, 0.72);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  backdrop-filter: blur(2px);
+}
+.chat-panel {
+  width: 100%; max-width: 440px; height: min(640px, 84vh);
+  background: var(--paper); border-radius: var(--radius-lg); box-shadow: var(--shadow-pop);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.chat-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 16px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--paper-soft);
+}
+.chat-header-text { min-width: 0; }
+.chat-header-title {
+  font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.chat-header-sub { font-size: 11.5px; color: var(--ink-soft); margin-top: 3px; font-family: var(--font-mono); }
+.chat-close {
+  border: none; background: rgba(255, 255, 255, 0.08); width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; color: var(--ink-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: color .15s var(--ease), background .15s var(--ease);
+}
+.chat-close:hover { color: var(--coral); background: var(--coral-soft); }
+
+.chat-body {
+  flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(227, 167, 58, 0.05), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(79, 169, 140, 0.05), transparent 45%);
+}
+.chat-row { display: flex; align-items: flex-end; gap: 8px; max-width: 82%; }
+.chat-row.theirs { align-self: flex-start; }
+.chat-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+
+.chat-avatar {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--sky); color: #0c1a2e;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+
+.chat-bubble-wrap { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.chat-row.mine .chat-bubble-wrap { align-items: flex-end; }
+
+.chat-bubble {
+  padding: 9px 13px; border-radius: 16px; font-size: 13.5px; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word;
+  background: var(--surface-raised); color: var(--ink);
+  border-bottom-left-radius: 4px;
+}
+.chat-row.mine .chat-bubble {
+  background: var(--accent); color: var(--accent-ink);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+.chat-time { font-size: 10px; color: var(--text-faint); font-family: var(--font-mono); padding: 0 2px; }
+
+.chat-input-row {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); background: var(--paper-soft);
+}
+.chat-input-row input {
+  flex: 1; background: var(--bg-soft); border: 1px solid var(--line-strong); color: var(--text);
+  border-radius: 999px; padding: 10px 16px; font-size: 13.5px;
+}
+.chat-input-row input:focus { outline: none; border-color: var(--accent); }
+.chat-input-row input:disabled { opacity: .6; }
+
+.chat-send-btn {
+  width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--accent); color: var(--accent-ink);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+  transition: background .15s var(--ease), transform .15s var(--ease);
+}
+.chat-send-btn:hover:not(:disabled) { background: var(--accent-strong); transform: scale(1.05); }
+.chat-send-btn:disabled { opacity: .4; cursor: not-allowed; }
