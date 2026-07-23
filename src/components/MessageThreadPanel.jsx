@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, X } from "lucide-react";
+import { Send } from "lucide-react";
+import Modal from "./Modal.jsx";
 import { messageApi, ApiError } from "../api/client.js";
 import { useToast } from "../context/ToastContext.jsx";
 
-// 쪽지 클릭 시 뜨는 채팅형 팝업.
-// 카카오톡/인스타 DM 처럼 말풍선이 좌/우로 쌓이고, 하단 입력창 + 전송 버튼으로 답장한다.
-// (실시간 아님 - 전송 시 서버에 저장 후 다시 목록을 새로고침해서 보여주는 방식)
+// 쪽지 클릭 시 뜨는 대화 모달. 모임 관리 모달과 동일한 Modal 컴포넌트를 사용하고,
+// 내부는 카카오톡처럼 말풍선(보낸 사람 닉네임 + 내용 + 시간)으로 구성한다.
 export default function MessageThreadPanel({ threadId, onClose, onChanged }) {
   const toast = useToast();
   const [detail, setDetail] = useState(null);
@@ -56,64 +56,58 @@ export default function MessageThreadPanel({ threadId, onClose, onChanged }) {
   }
 
   return (
-    <div
-      className="chat-overlay"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="chat-panel">
-        <div className="chat-header">
-          <div className="chat-header-text">
-            <div className="chat-header-title">{detail?.title ?? "쪽지"}</div>
-            {detail && (
-              <div className="chat-header-sub">
-                {detail.teamTitle} · {detail.otherNickname}님과의 대화
-              </div>
-            )}
-          </div>
-          <button className="chat-close" onClick={onClose} aria-label="닫기">
-            <X size={18} />
-          </button>
+    <Modal onClose={onClose} wide>
+      {loading && (
+        <div className="center-loading">
+          <div className="spinner" /> 불러오는 중...
         </div>
+      )}
+      {!loading && error && <div className="auth-banner err">{error}</div>}
 
-        <div className="chat-body">
-          {loading && (
-            <div className="center-loading">
-              <div className="spinner" /> 불러오는 중...
-            </div>
-          )}
-          {!loading && error && <div className="auth-banner err">{error}</div>}
+      {!loading && detail && (
+        <>
+          <div className="modal-title">{detail.title}</div>
 
-          {!loading && detail && (
-            <>
-              {detail.messages.map((m) => (
-                <div key={m.messageId} className={`chat-row ${m.mine ? "mine" : "theirs"}`}>
-                  {!m.mine && <div className="chat-avatar">{detail.otherNickname?.charAt(0) ?? "?"}</div>}
-                  <div className="chat-bubble-wrap">
+          <div className="detail-grid">
+            <dt>모임</dt>
+            <dd>{detail.teamTitle}</dd>
+            <dt>대화 상대</dt>
+            <dd>{detail.otherNickname}</dd>
+          </div>
+
+          <hr className="divider" />
+          <div className="section-label">대화 내용</div>
+
+          <div className="chat-body-inline">
+            {detail.messages.map((m) => (
+              <div key={m.messageId} className={`chat-row ${m.mine ? "mine" : "theirs"}`}>
+                <div className="chat-bubble-wrap">
+                  <div className="chat-sender-name">{m.mine ? "나" : m.senderNickname}</div>
+                  <div className="chat-bubble-line">
+                    {!m.mine && <div className="chat-time">{formatTime(m.createdAt)}</div>}
                     <div className="chat-bubble">{m.content}</div>
-                    <div className="chat-time">{formatTime(m.createdAt)}</div>
+                    {m.mine && <div className="chat-time">{formatTime(m.createdAt)}</div>}
                   </div>
                 </div>
-              ))}
-              <div ref={bottomRef} />
-            </>
-          )}
-        </div>
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
 
-        <form className="chat-input-row" onSubmit={handleSend}>
-          <input
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder="메시지를 입력하세요"
-            disabled={sending}
-          />
-          <button type="submit" className="chat-send-btn" disabled={sending || !draft.trim()} aria-label="보내기">
-            <Send size={16} />
-          </button>
-        </form>
-      </div>
-    </div>
+          <form className="chat-input-row" onSubmit={handleSend}>
+            <input
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="메시지를 입력하세요"
+              disabled={sending}
+            />
+            <button type="submit" className="chat-send-btn" disabled={sending || !draft.trim()} aria-label="보내기">
+              <Send size={16} />
+            </button>
+          </form>
+        </>
+      )}
+    </Modal>
   );
 }
 

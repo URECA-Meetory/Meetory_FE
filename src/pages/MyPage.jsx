@@ -5,6 +5,8 @@ import { useToast } from "../context/ToastContext.jsx";
 import { messageApi, ApiError } from "../api/client.js";
 import MessageThreadPanel from "../components/MessageThreadPanel.jsx";
 
+const PAGE_SIZE = 5;
+
 export default function MyPage() {
   const { user, logout } = useAuth();
   const toast = useToast();
@@ -13,6 +15,8 @@ export default function MyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openThreadId, setOpenThreadId] = useState(null);
+  const [unreadExpanded, setUnreadExpanded] = useState(false);
+  const [readExpanded, setReadExpanded] = useState(false);
 
   const loadInbox = useCallback(async () => {
     setLoading(true);
@@ -40,6 +44,9 @@ export default function MyPage() {
     toast("로그아웃 되었습니다", "ok");
   }
 
+  const unreadVisible = unreadExpanded ? inbox.unread : inbox.unread.slice(0, PAGE_SIZE);
+  const readVisible = readExpanded ? inbox.read : inbox.read.slice(0, PAGE_SIZE);
+
   return (
     <main className="view">
       <div className="view-head center-head">
@@ -51,6 +58,7 @@ export default function MyPage() {
       </div>
 
       <div className="mypage-grid">
+        {/* 왼쪽: 내 정보 */}
         <div className="mypage-card">
           <div className="mypage-row">
             <div className="avatar-badge">{initial}</div>
@@ -76,10 +84,11 @@ export default function MyPage() {
           </button>
         </div>
 
+        {/* 오른쪽: 쪽지함 */}
         <div className="mypage-card inbox-card">
           <div className="inbox-head">
             <Mail size={18} />
-            <h2>받은 쪽지</h2>
+            <h2>쪽지함</h2>
           </div>
 
           {loading && (
@@ -98,20 +107,24 @@ export default function MyPage() {
                 {inbox.unread.length === 0 ? (
                   <p className="inline-msg">안 읽은 쪽지가 없습니다.</p>
                 ) : (
-                  <ul className="inbox-list">
-                    {inbox.unread.map((t) => (
-                      <li key={t.threadId} className="inbox-item unread" onClick={() => setOpenThreadId(t.threadId)}>
-                        <span className="dot" />
-                        <div className="inbox-item-body">
-                          <div className="inbox-item-title">{t.title}</div>
-                          <div className="inbox-item-meta">
-                            {t.otherNickname} · {t.teamTitle}
+                  <>
+                    <div className="msg-list">
+                      {unreadVisible.map((t) => (
+                        <div key={t.threadId} className="msg-card unread" onClick={() => setOpenThreadId(t.threadId)}>
+                          <div className="msg-card-body">
+                            <span className="msg-card-title">{t.title}</span>
+                            <span className="badge badge-cat">{t.teamTitle}</span>
                           </div>
-                          <div className="inbox-item-preview">{t.lastMessagePreview}</div>
+                          <span className="dot" />
                         </div>
-                      </li>
-                    ))}
-                  </ul>
+                      ))}
+                    </div>
+                    {inbox.unread.length > PAGE_SIZE && (
+                      <button className="btn-more" onClick={() => setUnreadExpanded((v) => !v)}>
+                        {unreadExpanded ? "접기" : `더보기 (${inbox.unread.length - PAGE_SIZE})`}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -122,19 +135,23 @@ export default function MyPage() {
                 {inbox.read.length === 0 ? (
                   <p className="inline-msg">읽은 쪽지가 없습니다.</p>
                 ) : (
-                  <ul className="inbox-list">
-                    {inbox.read.map((t) => (
-                      <li key={t.threadId} className="inbox-item" onClick={() => setOpenThreadId(t.threadId)}>
-                        <div className="inbox-item-body">
-                          <div className="inbox-item-title">{t.title}</div>
-                          <div className="inbox-item-meta">
-                            {t.otherNickname} · {t.teamTitle}
+                  <>
+                    <div className="msg-list">
+                      {readVisible.map((t) => (
+                        <div key={t.threadId} className="msg-card" onClick={() => setOpenThreadId(t.threadId)}>
+                          <div className="msg-card-body">
+                            <span className="msg-card-title">{t.title}</span>
+                            <span className="badge badge-cat">{t.teamTitle}</span>
                           </div>
-                          <div className="inbox-item-preview">{t.lastMessagePreview}</div>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
+                      ))}
+                    </div>
+                    {inbox.read.length > PAGE_SIZE && (
+                      <button className="btn-more" onClick={() => setReadExpanded((v) => !v)}>
+                        {readExpanded ? "접기" : `더보기 (${inbox.read.length - PAGE_SIZE})`}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </>
