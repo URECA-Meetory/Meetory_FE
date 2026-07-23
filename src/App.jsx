@@ -5,6 +5,7 @@ import AuthPage from "./pages/AuthPage.jsx";
 import TeamMatchPage from "./pages/TeamMatchPage.jsx";
 import BoardPage from "./pages/BoardPage.jsx";
 import MyPage from "./pages/MyPage.jsx";
+import OnboardingPage from "./pages/OnboardingPage.jsx";
 import TeamManagePage from "./pages/TeamManagePage.jsx";
 import UserMenu from "./components/UserMenu.jsx";
 
@@ -14,7 +15,7 @@ const TABS = [
 ];
 
 function Shell() {
-  const { user, initializing } = useAuth();
+  const { user, initializing, authenticating } = useAuth();
   const [tab, setTab] = useState("teams");
   const prevUserId = useRef(null);
 
@@ -27,16 +28,18 @@ function Shell() {
     prevUserId.current = currentId;
   }, [user]);
 
-  if (initializing) {
+  if (initializing || authenticating) {
     return (
       <div className="center-loading" style={{ minHeight: "100vh" }}>
         <div className="spinner" />
-        <span>세션 확인 중...</span>
+        <span>{authenticating ? "로그인 중..." : "세션 확인 중..."}</span>
       </div>
     );
   }
 
   if (!user) return <AuthPage />;
+
+  if (user.onboardingCompleted === false) return <OnboardingPage />;
 
   return (
     <div className="app-shell">

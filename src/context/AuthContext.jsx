@@ -1,9 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   authApi,
   clearSession,
+  getAuthEpoch,
   getStoredUser,
   getToken,
+  nextAuthEpoch,
   setUnauthorizedHandler,
   storeSession,
   userApi,
@@ -11,67 +13,132 @@ import {
 
 const AuthContext = createContext(null);
 
-function toUser(profile) {
+function normalizeUser(source) {
+  const fromProfile = "id" in source;
   return {
-    userId: profile.id,
-    nickname: profile.nickname,
-    email: profile.email,
-    role: profile.role,
-    createdAt: profile.createdAt,
+    userId: fromProfile ? source.id : source.userId,
+    nickname: source.nickname,
+    email: source.email ?? null,
+    age: source.age ?? null,
+    gender: source.gender ?? null,
+    hobbies: source.hobbies ?? null,
+    onboardingCompleted: source.onboardingCompleted === true,
+    role: source.role ?? null,
+    createdAt: source.createdAt ?? null,
   };
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => (getToken() ? getStoredUser() : null));
-  const [initializing, setInitializing] = useState(() => !!getToken());
+  const [user, setUser] = useState(null);
+  const [initializing, setInitializing] = useState(true);
+  const [authenticating, setAuthenticating] = useState(false);
+  const bootstrapStarted = useRef(false);
 
   const clearAuth = useCallback(() => {
+    nextAuthEpoch();
     clearSession();
     setUser(null);
   }, []);
 
+  const applyProfile = useCallback((profile) => {
+    const nextUser = normalizeUser(profile);
+    storeSession(getToken(), nextUser);
+    setUser(nextUser);
+    return nextUser;
+  }, []);
+
+  const syncProfile = useCallback(async () => {
+    const profile = await userApi.getProfile({ skipAuthRedirect: true });
+    return applyProfile(profile);
+  }, [applyProfile]);
+
+  const establishSession = useCallback(
+    async (loginData) => {
+      const partialUser = normalizeUser(loginData);
+      storeSession(loginData.accessToken, partialUser);
+      setUser(partialUser);
+      try {
+        return await syncProfile();
+      } catch {
+        return partialUser;
+      }
+    },
+    [syncProfile]
+  );
+
   useEffect(() => {
-    setUnauthorizedHandler(clearAuth);
+    setUnauthorizedHandler(() => {
+      if (getToken()) clearAuth();
+    });
     return () => setUnauthorizedHandler(null);
   }, [clearAuth]);
 
   useEffect(() => {
-    if (!getToken()) {
-      setInitializing(false);
-      return;
-    }
+    if (bootstrapStarted.current) return;
+    bootstrapStarted.current = true;
 
-    let cancelled = false;
+    const epoch = getAuthEpoch();
+
     (async () => {
+      if (!getToken()) {
+        setInitializing(false);
+        return;
+      }
+
       try {
-        const profile = await userApi.getProfile();
-        if (cancelled) return;
-        const nextUser = toUser(profile);
-        storeSession(getToken(), nextUser);
-        setUser(nextUser);
+        const profile = await userApi.getProfile({ skipAuthRedirect: true });
+        if (getAuthEpoch() !== epoch) return;
+        applyProfile(profile);
       } catch {
-        if (!cancelled) clearAuth();
+        if (getAuthEpoch() !== epoch) return;
+        const stored = getStoredUser();
+        if (stored?.userId) {
+          setUser(normalizeUser(stored));
+        } else {
+          clearAuth();
+        }
       } finally {
-        if (!cancelled) setInitializing(false);
+        if (getAuthEpoch() === epoch) setInitializing(false);
       }
     })();
+  }, [applyProfile, clearAuth]);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [clearAuth]);
+  const login = useCallback(
+    async (email, password) => {
+      nextAuthEpoch();
+      setAuthenticating(true);
+      try {
+        const data = await authApi.login({ email, password });
+        return await establishSession(data);
+      } catch (error) {
+        clearAuth();
+        throw error;
+      } finally {
+        setAuthenticating(false);
+        setInitializing(false);
+      }
+    },
+    [establishSession, clearAuth]
+  );
 
-  const login = useCallback(async (email, password) => {
-    const data = await authApi.login({ email, password });
-    storeSession(data.accessToken, { userId: data.userId, nickname: data.nickname });
-    setUser({ userId: data.userId, nickname: data.nickname });
-
-    const profile = await userApi.getProfile();
-    const fullUser = toUser(profile);
-    storeSession(data.accessToken, fullUser);
-    setUser(fullUser);
-    return fullUser;
-  }, []);
+  const signupAndLogin = useCallback(
+    async (email, password, nickname) => {
+      nextAuthEpoch();
+      setAuthenticating(true);
+      try {
+        await authApi.signup({ email, password, nickname });
+        const data = await authApi.login({ email, password });
+        return await establishSession(data);
+      } catch (error) {
+        clearAuth();
+        throw error;
+      } finally {
+        setAuthenticating(false);
+        setInitializing(false);
+      }
+    },
+    [establishSession, clearAuth]
+  );
 
   const signup = useCallback(async (email, password, nickname) => {
     await authApi.signup({ email, password, nickname });
@@ -81,19 +148,26 @@ export function AuthProvider({ children }) {
     try {
       await authApi.logout();
     } catch {
-      // 서버 로그아웃이 실패하더라도 클라이언트 세션은 정리한다.
+      // 서버 로그아웃 실패 시에도 클라이언트 세션은 정리
     } finally {
       clearAuth();
     }
   }, [clearAuth]);
 
+  const completeOnboarding = useCallback(async (payload) => {
+    const profile = await userApi.completeOnboarding(payload);
+    return applyProfile(profile);
+  }, [applyProfile]);
+
+  const skipOnboarding = useCallback(async () => {
+    const profile = await userApi.skipOnboarding();
+    return applyProfile(profile);
+  }, [applyProfile]);
+
   const updateNickname = useCallback(async (nickname) => {
     const profile = await userApi.updateNickname(nickname);
-    const nextUser = toUser(profile);
-    storeSession(getToken(), nextUser);
-    setUser(nextUser);
-    return nextUser;
-  }, []);
+    return applyProfile(profile);
+  }, [applyProfile]);
 
   const updatePassword = useCallback(async (currentPassword, newPassword) => {
     await userApi.updatePassword(currentPassword, newPassword);
@@ -108,14 +182,31 @@ export function AuthProvider({ children }) {
     () => ({
       user,
       initializing,
+      authenticating,
       login,
       signup,
+      signupAndLogin,
       logout,
+      completeOnboarding,
+      skipOnboarding,
       updateNickname,
       updatePassword,
       deleteAccount,
     }),
-    [user, initializing, login, signup, logout, updateNickname, updatePassword, deleteAccount]
+    [
+      user,
+      initializing,
+      authenticating,
+      login,
+      signup,
+      signupAndLogin,
+      logout,
+      completeOnboarding,
+      skipOnboarding,
+      updateNickname,
+      updatePassword,
+      deleteAccount,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

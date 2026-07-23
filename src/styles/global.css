@@ -138,6 +138,32 @@ main.view { flex: 1; padding: 32px 28px 80px; max-width: 1080px; width: 100%; ma
 .auth-banner.err { background: var(--coral-soft); color: #f3a798; }
 .auth-banner.ok { background: var(--jade-soft); color: #a9dcc9; }
 
+/* ---------------------------------- onboarding ---------------------------------- */
+.onboarding-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 40px 24px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(227,167,58,0.14), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(79,169,140,0.12), transparent 50%),
+    var(--bg-soft);
+}
+.onboarding-card {
+  width: 100%; max-width: 460px;
+  background: var(--surface-raised); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg); padding: 36px 32px; box-shadow: var(--shadow-card);
+}
+.onboarding-card .kicker { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
+.onboarding-card h1 {
+  font-family: var(--font-display); font-size: 28px; line-height: 1.35; margin: 8px 0 10px; font-weight: 500;
+}
+.onboarding-sub { color: var(--accent); font-style: italic; font-size: 22px; }
+.onboarding-desc { color: var(--text-soft); font-size: 14px; line-height: 1.6; margin: 0 0 24px; }
+.btn-ghost-skip {
+  background: transparent; border: none; color: var(--text-faint);
+  margin-top: 12px; font-size: 13px; cursor: pointer;
+}
+.btn-ghost-skip:hover { color: var(--text-soft); }
+
 /* ---------------------------------- section heading ---------------------------------- */
 .view-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 22px; gap: 16px; flex-wrap: wrap; }
 .view-head .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
@@ -258,17 +284,26 @@ main.view { flex: 1; padding: 32px 28px 80px; max-width: 1080px; width: 100%; ma
 }
 .chip.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 
-/* ---------------------------------- board placeholder ---------------------------------- */
-.board-placeholder {
-  border: 1px dashed var(--line-strong); border-radius: var(--radius-lg);
-  padding: 90px 24px; text-align: center; color: var(--text-faint);
-  background: repeating-linear-gradient(135deg, rgba(255,255,255,0.015) 0 2px, transparent 2px 14px);
+/* ---------------------------------- board ---------------------------------- */
+.board-list { display: flex; flex-direction: column; gap: 14px; }
+.board-card {
+  background: var(--paper); color: var(--ink); border-radius: var(--radius-lg);
+  padding: 20px 22px; box-shadow: var(--shadow-card); cursor: pointer;
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+  border: 1px solid var(--line);
 }
-.board-placeholder .glyph { font-family: var(--font-display); font-size: 40px; color: var(--paper); margin-bottom: 12px; }
-.board-placeholder .ticket {
-  display: inline-block; margin-top: 18px; padding: 6px 14px; border: 1px dashed var(--line-strong);
-  border-radius: 999px; font-family: var(--font-mono); font-size: 11.5px; color: var(--accent);
+.board-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+.board-card-title {
+  font-family: var(--font-display); font-size: 17px; font-weight: 600; margin: 0 0 8px;
 }
+.board-card-preview { font-size: 13px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 12px; }
+.board-card-meta {
+  display: flex; gap: 14px; font-size: 12px; color: var(--ink-soft); font-family: var(--font-mono);
+}
+.board-detail-meta {
+  display: flex; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--text-soft); font-family: var(--font-mono);
+}
+.board-detail-body { white-space: pre-wrap; margin-top: 18px; }
 
 /* ---------------------------------- my page ---------------------------------- */
 .mypage-card {

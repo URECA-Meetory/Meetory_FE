@@ -158,6 +158,18 @@ export default function MyPage() {
             <span>{user.nickname}</span>
           </div>
           <div className="row">
+            <span>나이</span>
+            <span>{user.age != null ? `${user.age}세` : "-"}</span>
+          </div>
+          <div className="row">
+            <span>성별</span>
+            <span>{user.gender ?? "-"}</span>
+          </div>
+          <div className="row">
+            <span>취미</span>
+            <span>{user.hobbies ?? "-"}</span>
+          </div>
+          <div className="row">
             <span>회원 번호</span>
             <span>{user.userId}</span>
           </div>

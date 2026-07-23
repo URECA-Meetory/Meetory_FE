@@ -31,12 +31,23 @@ class ApiError extends Error {
 }
 
 let onUnauthorized = null;
+let authEpoch = 0;
+
+export function nextAuthEpoch() {
+  authEpoch += 1;
+  return authEpoch;
+}
+
+export function getAuthEpoch() {
+  return authEpoch;
+}
 
 export function setUnauthorizedHandler(handler) {
   onUnauthorized = handler;
 }
 
 async function request(path, { method = "GET", body, auth = false, skipAuthRedirect = false } = {}) {
+  const requestEpoch = getAuthEpoch();
   const headers = { "Content-Type": "application/json" };
   if (auth) {
     const token = getToken();
@@ -63,7 +74,9 @@ async function request(path, { method = "GET", body, auth = false, skipAuthRedir
 
   if (!res.ok) {
     if (res.status === 401 && auth && !skipAuthRedirect && onUnauthorized) {
-      onUnauthorized();
+      if (requestEpoch === getAuthEpoch()) {
+        onUnauthorized();
+      }
     }
     const message = json?.message || `요청에 실패했습니다 (${res.status})`;
     throw new ApiError(message, res.status);
@@ -80,7 +93,8 @@ export const authApi = {
 
 // ---------------- Profile ----------------
 export const userApi = {
-  getProfile: () => request("/users/me", { auth: true }),
+  getProfile: ({ skipAuthRedirect = false } = {}) =>
+    request("/users/me", { auth: true, skipAuthRedirect }),
   updateNickname: (nickname) =>
     request("/users/me", { method: "PATCH", body: { nickname }, auth: true }),
   updatePassword: (currentPassword, newPassword) =>
@@ -89,8 +103,22 @@ export const userApi = {
       body: { currentPassword, newPassword },
       auth: true,
     }),
+  completeOnboarding: (payload) =>
+    request("/users/me/onboarding", { method: "PUT", body: payload, auth: true }),
+  skipOnboarding: () =>
+    request("/users/me/onboarding/skip", { method: "POST", auth: true }),
   deleteAccount: (password) =>
     request("/users/me", { method: "DELETE", body: { password }, auth: true, skipAuthRedirect: true }),
+};
+
+// ---------------- Boards ----------------
+export const boardApi = {
+  list: () => request("/boards"),
+  detail: (boardId) => request(`/boards/${boardId}`),
+  create: (payload) => request("/boards", { method: "POST", body: payload, auth: true }),
+  update: (boardId, payload) =>
+    request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true }),
+  remove: (boardId) => request(`/boards/${boardId}`, { method: "DELETE", auth: true }),
 };
 
 // ---------------- Teams ----------------
