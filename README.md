@@ -31,6 +31,82 @@ Spring Boot Backend와 REST API를 통해 통신하며 모임 생성, 참여, �
 - MySQL
 
 ---
+# 주요 기능
+
+## 로그인 / 회원가입
+
+- 회원가입
+- 로그인
+- JWT Access Token 저장
+- 자동 로그인 상태 유지
+- 로그아웃
+
+
+---
+
+## 모임 모집
+
+- 모임 목록 조회
+- 카테고리 필터
+- 모임 생성
+- 상세 조회
+- 팀원 목록 조회
+- 정원 게이지 표시
+- 모임 신청
+
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" />
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" />
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" />
+
+---
+
+## 게시판
+
+현재 UI만 구성되어 있으며 추후 구현 예정입니다.
+
+---
+
+## 모임 모집
+- 리더 전용 신청 승인 / 거절
+
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/db98d4dd-e169-4d79-a251-01772789781c" />
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/164236c2-134d-4bf0-8be4-9f5bb6b7771e" />
+
+
+## 마이페이지 & 쪽지함
+
+- 로그인한 사용자 정보 조회
+- 로그아웃
+- 안 읽은 쪽지
+- 읽은 쪽지
+- 쪽지 송신 및 수신 기능
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/24cceae5-727b-460e-9f2e-bf3dcbadc98d" />
+<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/abe46b35-f215-4e0a-ae3b-245b7cfdaabc" />
+---
+
+## 👥 Team Members
+
+### 👤 이수현
+- **담당**
+  - 로그인
+  - 회원가입
+  - 마이페이지(개인정보)
+
+---
+
+### 👤 정문구
+- **담당**
+  - 게시판
+
+---
+
+### 👤 조성원
+- **담당**
+  - 메인 화면
+  - 모임 모집
+  - 모임 관리
+  - 마이페이지(쪽지함)
+  
 
 # 실행 방법
 
@@ -87,63 +163,6 @@ http://localhost:8080
 ```bash
 VITE_API_TARGET=http://localhost:9090 npm run dev
 ```
-
----
-
-# 주요 기능
-
-## 로그인 / 회원가입
-
-- 회원가입
-- 로그인
-- JWT Access Token 저장
-- 자동 로그인 상태 유지
-- 로그아웃
-
-
----
-
-## 모임 모집
-
-- 모임 목록 조회
-- 카테고리 필터
-- 모임 생성
-- 상세 조회
-- 팀원 목록 조회
-- 정원 게이지 표시
-- 모임 신청
-
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" />
-
----
-
-## 게시판
-
-현재 UI만 구성되어 있으며 추후 구현 예정입니다.
-
----
-
-## 모임 모집
-- 리더 전용 신청 승인 / 거절
-
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/db98d4dd-e169-4d79-a251-01772789781c" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/164236c2-134d-4bf0-8be4-9f5bb6b7771e" />
-
-
-## 마이페이지 & 쪽지함
-
-- 로그인한 사용자 정보 조회
-- 로그아웃
-- 안 읽은 쪽지
-- 읽은 쪽지
-- 쪽지 송신 및 수신 기능
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/24cceae5-727b-460e-9f2e-bf3dcbadc98d" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/abe46b35-f215-4e0a-ae3b-245b7cfdaabc" />
-
-
----
 
 # API 연동
 
