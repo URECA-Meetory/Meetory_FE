@@ -1,5 +1,10 @@
 # Meetory Frontend
 
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![SpringBoot](https://img.shields.io/badge/API-SpringBoot-6DB33F)
+![License](https://img.shields.io/badge/Project-URECA-blue)
+
 > **Meetory (Meetup + Story)**  
 > 관심사가 같은 사람들과 모임을 만들고, 참여하며 새로운 이야기를 만들어가는 커뮤니티 플랫폼입니다.
 
