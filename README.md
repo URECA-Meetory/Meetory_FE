@@ -100,9 +100,10 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 - 자동 로그인 상태 유지
 - 로그아웃
 
+
 ---
 
-## 팀 매칭
+## 모임 모집
 
 - 모임 목록 조회
 - 카테고리 필터
@@ -112,6 +113,8 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 - 정원 게이지 표시
 - 모임 신청
 - 리더 전용 신청 승인 / 거절
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" />
+<img width="1918" height="909" alt="image" src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" />
 
 ---
 
@@ -121,10 +124,14 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 
 ---
 
-## 마이페이지
+## 마이페이지 & 쪽지함
 
 - 로그인한 사용자 정보 조회
 - 로그아웃
+- 안 읽은 쪽지
+- 읽은 쪽지
+- 쪽지 송신 및 수신 기능
+<img width="1917" height="907" alt="image" src="https://github.com/user-attachments/assets/68281801-bfbb-4328-9501-2e0c33c39357" />
 
 ---
 
