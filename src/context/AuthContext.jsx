@@ -1,12 +1,11 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
-import { authApi, clearSession, storeSession } from "../api/client.js";
+import { authApi, clearSession, getStoredUser, storeSession } from "../api/client.js";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // 앱을 새로 열 때마다 항상 로그인 화면부터 시작하도록,
-  // localStorage에 저장된 세션을 자동으로 복원하지 않는다.
-  const [user, setUser] = useState(null);
+  // 새로고침 후에도 저장된 세션이 있으면 로그인 상태를 복원한다.
+  const [user, setUser] = useState(() => getStoredUser());
 
   const login = useCallback(async (email, password) => {
     const data = await authApi.login({ email, password });
