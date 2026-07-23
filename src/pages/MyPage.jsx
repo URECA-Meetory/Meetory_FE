@@ -15,6 +15,8 @@ export default function MyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openThreadId, setOpenThreadId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [unreadExpanded, setUnreadExpanded] = useState(false);
   const [readExpanded, setReadExpanded] = useState(false);
 
@@ -40,8 +42,14 @@ export default function MyPage() {
   const initial = user.nickname?.charAt(0) ?? "?";
 
   async function handleLogout() {
-    await logout();
-    toast("로그아웃 되었습니다", "ok");
+    setLoggingOut(true);
+    try {
+      await logout();
+      toast("로그아웃 되었습니다", "ok");
+    } finally {
+      setLoggingOut(false);
+      setConfirmOpen(false);
+    }
   }
 
   const unreadVisible = unreadExpanded ? inbox.unread : inbox.unread.slice(0, PAGE_SIZE);
@@ -75,7 +83,7 @@ export default function MyPage() {
             </div>
           </div>
 
-          <button className="btn btn-danger-outline btn-block" style={{ marginTop: 24 }} onClick={handleLogout}>
+          <button className="btn btn-danger-outline btn-block" style={{ marginTop: 24 }} onClick={() => setConfirmOpen(true)}>
             로그아웃
           </button>
         </div>
@@ -160,6 +168,27 @@ export default function MyPage() {
           )}
         </div>
       </div>
+
+      {confirmOpen && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setConfirmOpen(false);
+          }}
+        >
+          <div className="modal-card confirm-card">
+            <div className="modal-title">로그아웃 하시겠습니까?</div>
+            <div className="modal-actions">
+              <button className="btn btn-secondary" onClick={() => setConfirmOpen(false)}>
+                돌아가기
+              </button>
+              <button className="btn btn-danger-outline" disabled={loggingOut} onClick={handleLogout}>
+                {loggingOut ? "로그아웃 중..." : "로그아웃"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {openThreadId && (
         <MessageThreadPanel threadId={openThreadId} onClose={() => setOpenThreadId(null)} onChanged={loadInbox} />
