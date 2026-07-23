@@ -72,7 +72,7 @@ Spring Boot Backend와 REST API를 통해 통신하며 모임 생성, 참여, �
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/db98d4dd-e169-4d79-a251-01772789781c" />
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/164236c2-134d-4bf0-8be4-9f5bb6b7771e" />
 
-
+---
 ## 마이페이지 & 쪽지함
 
 - 로그인한 사용자 정보 조회
@@ -82,8 +82,8 @@ Spring Boot Backend와 REST API를 통해 통신하며 모임 생성, 참여, �
 - 쪽지 송신 및 수신 기능
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/24cceae5-727b-460e-9f2e-bf3dcbadc98d" />
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/abe46b35-f215-4e0a-ae3b-245b7cfdaabc" />
----
 
+---
 ## 👥 Team Members
 
 ### 👤 이수현
