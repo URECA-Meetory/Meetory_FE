@@ -76,14 +76,15 @@ export default function TeamManagePage() {
                   <div className="body">
                     <div className="title-row">
                       <span className="title">{t.title}</span>
-                      <span className="badge badge-cat">{t.category}</span>
-                      {t.leader && <span className="badge badge-leader">리더</span>}
-                      {hasPending && <span className="badge badge-pending">신청 {pendingCount}건</span>}
-                      <span className={`badge ${t.status === "모집중" ? "badge-open" : "badge-closed"}`}>{t.status}</span>
+                      <div className="manage-badges">
+                        <span className="badge badge-cat">{t.category}</span>
+                        {t.leader && <span className="badge badge-leader">리더</span>}
+                        {hasPending && <span className="badge badge-pending">신청 {pendingCount}건</span>}
+                        <span className={`badge ${t.status === "모집중" ? "badge-open" : "badge-closed"}`}>{t.status}</span>
+                      </div>
                     </div>
-                    <div className="meta">
+                    <div className="meta meta-right">
                       <span>인원 {t.currentMembers}/{t.maxMembers}</span>
-                      <span>가입 {formatJoined(t.joinedAt)}</span>
                     </div>
                   </div>
                 </div>
