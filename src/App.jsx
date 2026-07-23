@@ -14,7 +14,7 @@ const TABS = [
 ];
 
 function Shell() {
-  const { user } = useAuth();
+  const { user, initializing } = useAuth();
   const [tab, setTab] = useState("teams");
   const prevUserId = useRef(null);
 
@@ -26,6 +26,15 @@ function Shell() {
     }
     prevUserId.current = currentId;
   }, [user]);
+
+  if (initializing) {
+    return (
+      <div className="center-loading" style={{ minHeight: "100vh" }}>
+        <div className="spinner" />
+        <span>세션 확인 중...</span>
+      </div>
+    );
+  }
 
   if (!user) return <AuthPage />;
 

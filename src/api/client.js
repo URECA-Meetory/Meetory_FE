@@ -13,9 +13,9 @@ export function getStoredUser() {
   return raw ? JSON.parse(raw) : null;
 }
 
-export function storeSession(accessToken, userId, nickname) {
+export function storeSession(accessToken, user) {
   localStorage.setItem(TOKEN_KEY, accessToken);
-  localStorage.setItem(USER_KEY, JSON.stringify({ userId, nickname }));
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function clearSession() {
@@ -30,7 +30,13 @@ class ApiError extends Error {
   }
 }
 
-async function request(path, { method = "GET", body, auth = false } = {}) {
+let onUnauthorized = null;
+
+export function setUnauthorizedHandler(handler) {
+  onUnauthorized = handler;
+}
+
+async function request(path, { method = "GET", body, auth = false, skipAuthRedirect = false } = {}) {
   const headers = { "Content-Type": "application/json" };
   if (auth) {
     const token = getToken();
@@ -44,7 +50,7 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
-  } catch (networkErr) {
+  } catch {
     throw new ApiError("서버에 연결할 수 없습니다. 백엔드(8080)가 실행 중인지 확인해주세요.", 0);
   }
 
@@ -56,6 +62,9 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
   }
 
   if (!res.ok) {
+    if (res.status === 401 && auth && !skipAuthRedirect && onUnauthorized) {
+      onUnauthorized();
+    }
     const message = json?.message || `요청에 실패했습니다 (${res.status})`;
     throw new ApiError(message, res.status);
   }
@@ -66,7 +75,22 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
 export const authApi = {
   signup: (payload) => request("/auth/signup", { method: "POST", body: payload }),
   login: (payload) => request("/auth/login", { method: "POST", body: payload }),
-  logout: () => request("/auth/logout", { method: "POST", auth: true }),
+  logout: () => request("/auth/logout", { method: "POST", auth: true, skipAuthRedirect: true }),
+};
+
+// ---------------- Profile ----------------
+export const userApi = {
+  getProfile: () => request("/users/me", { auth: true }),
+  updateNickname: (nickname) =>
+    request("/users/me", { method: "PATCH", body: { nickname }, auth: true }),
+  updatePassword: (currentPassword, newPassword) =>
+    request("/users/me/password", {
+      method: "PUT",
+      body: { currentPassword, newPassword },
+      auth: true,
+    }),
+  deleteAccount: (password) =>
+    request("/users/me", { method: "DELETE", body: { password }, auth: true, skipAuthRedirect: true }),
 };
 
 // ---------------- Teams ----------------
