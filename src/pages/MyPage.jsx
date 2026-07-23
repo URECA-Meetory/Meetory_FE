@@ -64,7 +64,7 @@ export default function MyPage() {
             <div className="avatar-badge">{initial}</div>
             <div>
               <h2>{user.nickname}</h2>
-              <div className="uid">USER ID · {user.userId}</div>
+              <div className="uid">내 계정</div>
             </div>
           </div>
 
@@ -72,10 +72,6 @@ export default function MyPage() {
             <div className="row">
               <span>닉네임</span>
               <span>{user.nickname}</span>
-            </div>
-            <div className="row">
-              <span>회원 번호</span>
-              <span>{user.userId}</span>
             </div>
           </div>
 

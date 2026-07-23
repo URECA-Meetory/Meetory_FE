@@ -119,9 +119,7 @@ export default function TeamManageModal({ teamId, onClose, onChanged }) {
             <ul className="member-list">
               {members.map((m) => (
                 <li key={m.memberId}>
-                  <span>
-                    {m.nickname} <span className="m-id">#{m.userId}</span>
-                  </span>
+                  <span>{m.nickname}</span>
                   <span className="m-date">가입일 {formatDate(m.joinedAt)}</span>
                 </li>
               ))}
