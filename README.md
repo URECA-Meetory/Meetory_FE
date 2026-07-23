@@ -1,82 +1,249 @@
 # Meetory Frontend
 
-STS(Spring Tools) + Gradle로 만든 Meetory 백엔드(Spring Boot, 포트 8080)와
-연동하는 React(Vite) 프론트엔드입니다.
+> **Meetory (Meetup + Story)**  
+> 관심사가 같은 사람들과 모임을 만들고, 참여하며 새로운 이야기를 만들어가는 커뮤니티 플랫폼입니다.
 
-## 실행 방법
+React(Vite) 기반의 Meetory Frontend입니다.  
+Spring Boot Backend와 REST API를 통해 통신하며 모임 생성, 참여, 로그인, 마이페이지 등의 기능을 제공합니다.
+
+---
+
+# Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- JavaScript (ES6+)
+- Context API
+- CSS
+
+### Backend
+
+- Spring Boot
+- Spring Security
+- JPA
+- MySQL
+
+---
+
+# 실행 방법
+
+## 1. 프로젝트 설치
 
 ```bash
 npm install
+```
+
+## 2. 개발 서버 실행
+
+```bash
 npm run dev
 ```
 
-- 개발 서버: http://localhost:5173
-- `/api`로 시작하는 모든 요청은 `vite.config.js`의 proxy 설정을 통해
-  `http://localhost:8080`(Spring Boot)으로 자동 전달됩니다.
-  → 백엔드에 별도 CORS 설정을 추가할 필요가 없습니다.
-- 백엔드 주소가 다르다면 `VITE_API_TARGET` 환경변수로 바꿀 수 있습니다.
-  ```bash
-  VITE_API_TARGET=http://localhost:9090 npm run dev
-  ```
-
-먼저 STS에서 Spring Boot 애플리케이션(MeetoryApplication)을 8080 포트로 실행한 뒤,
-이 프론트엔드를 `npm run dev`로 띄우면 됩니다.
-
-## 화면 구성
-
-| 화면 | 설명 |
-| --- | --- |
-| 로그인 / 회원가입 | 토글형 카드 UI. `/api/auth/login`, `/api/auth/signup` 사용 |
-| 팀 매칭 | 잡코리아 공고 스타일 패널 목록. 카테고리 필터, 모임 개설, 설명 클릭 시 상세 팝업(정원 게이지, 팀원 목록, 리더 전용 신청 수락/거절) |
-| 게시판 | 자리만 잡아둔 빈 화면 (추후 구현 예정) |
-| 마이페이지 | 로그인된 유저 정보 표시, 로그아웃 |
-
-## 백엔드 API 매핑
-
-| 기능 | 메서드/경로 | 인증 |
-| --- | --- | --- |
-| 회원가입 | `POST /api/auth/signup` | - |
-| 로그인 | `POST /api/auth/login` | - |
-| 로그아웃 | `POST /api/auth/logout` | Bearer |
-| 모임 목록 | `GET /api/teams` | - |
-| 모임 상세 | `GET /api/teams/{teamId}` | - |
-| 모임 개설 | `POST /api/teams` | Bearer |
-| 모임 신청 | `POST /api/teams/{teamId}/apply` | Bearer |
-| 팀원 목록 | `GET /api/teams/{teamId}/members` | - |
-| 대기 신청 목록 (리더 전용) | `GET /api/teams/{teamId}/applications` | Bearer |
-| 신청 수락 | `POST /api/teams/{teamId}/applications/{memberId}/approve` | Bearer |
-| 신청 거절 | `POST /api/teams/{teamId}/applications/{memberId}/reject` | Bearer |
-
-로그인 응답(`accessToken`, `userId`, `nickname`)은 `localStorage`에 저장되고,
-이후 요청 시 `Authorization: Bearer {accessToken}` 헤더로 자동 첨부됩니다
-(`src/api/client.js`의 `request()` 참고).
-
-## 폴더 구조
+개발 서버
 
 ```
-src/
-  api/client.js          모든 백엔드 호출을 모아둔 fetch 래퍼
-  context/
-    AuthContext.jsx       로그인 상태 (user, login, signup, logout)
-    ToastContext.jsx       우측 하단 토스트 알림
-  components/
-    TeamCard.jsx           목록 패널 카드
-    TeamDetailModal.jsx     상세 팝업 (팀원/신청 관리 포함)
-    CreateTeamModal.jsx     모임 개설 폼
-    Gauge.jsx               정원 게이지(시그니처 UI)
-    Modal.jsx               공용 모달 셸
-  pages/
-    AuthPage.jsx            로그인/회원가입
-    TeamMatchPage.jsx       팀 매칭 탭
-    BoardPage.jsx           게시판 탭 (빈 화면)
-    MyPage.jsx              마이페이지 탭
-  styles/
-    tokens.css              색상/타이포/모션 디자인 토큰
-    global.css               전체 스타일
+http://localhost:5173
 ```
 
-## 다음 단계 아이디어
+---
 
-- 게시판: `Board`, `Post` 엔티티 추가 후 `BoardPage.jsx`에 목록/글쓰기/댓글 UI 연결
-- 마이페이지: "내가 신청한 모임", "내가 개설한 모임" 목록을 보여주는 API 추가
-- 리프레시 토큰 / accessToken 만료 처리
+# Backend 실행
+
+먼저 Spring Boot 서버를 실행합니다.
+
+```
+MeetoryApplication
+```
+
+기본 주소
+
+```
+http://localhost:8080
+```
+
+---
+
+# API Proxy
+
+프론트에서는 `/api`로 시작하는 요청을 자동으로 Spring Boot 서버로 전달합니다.
+
+```
+/api/**
+        ↓
+http://localhost:8080
+```
+
+별도의 CORS 설정 없이 개발 가능합니다.
+
+백엔드 주소를 변경하려면
+
+```bash
+VITE_API_TARGET=http://localhost:9090 npm run dev
+```
+
+---
+
+# 주요 기능
+
+## 로그인 / 회원가입
+
+- 회원가입
+- 로그인
+- JWT Access Token 저장
+- 자동 로그인 상태 유지
+- 로그아웃
+
+---
+
+## 팀 매칭
+
+- 모임 목록 조회
+- 카테고리 필터
+- 모임 생성
+- 상세 조회
+- 팀원 목록 조회
+- 정원 게이지 표시
+- 모임 신청
+- 리더 전용 신청 승인 / 거절
+
+---
+
+## 게시판
+
+현재 UI만 구성되어 있으며 추후 구현 예정입니다.
+
+---
+
+## 마이페이지
+
+- 로그인한 사용자 정보 조회
+- 로그아웃
+
+---
+
+# API 연동
+
+| 기능 | Method | URL |
+|------|--------|-----|
+| 회원가입 | POST | `/api/auth/signup` |
+| 로그인 | POST | `/api/auth/login` |
+| 로그아웃 | POST | `/api/auth/logout` |
+| 모임 목록 | GET | `/api/teams` |
+| 모임 상세 | GET | `/api/teams/{teamId}` |
+| 모임 생성 | POST | `/api/teams` |
+| 모임 신청 | POST | `/api/teams/{teamId}/apply` |
+| 팀원 조회 | GET | `/api/teams/{teamId}/members` |
+| 신청 목록 | GET | `/api/teams/{teamId}/applications` |
+| 신청 승인 | POST | `/api/teams/{teamId}/applications/{memberId}/approve` |
+| 신청 거절 | POST | `/api/teams/{teamId}/applications/{memberId}/reject` |
+
+---
+
+# 인증 방식
+
+로그인 성공 시
+
+```
+accessToken
+userId
+nickname
+```
+
+를 `localStorage`에 저장합니다.
+
+이후 모든 인증이 필요한 요청에는
+
+```
+Authorization: Bearer {accessToken}
+```
+
+헤더가 자동으로 추가됩니다.
+
+관련 코드는
+
+```
+src/api/client.js
+```
+
+에서 관리합니다.
+
+---
+
+# 프로젝트 구조
+
+```
+src
+│
+├── api
+│   └── client.js
+│
+├── assets
+│
+├── components
+│   ├── CreateTeamModal.jsx
+│   ├── Gauge.jsx
+│   ├── Modal.jsx
+│   ├── TeamCard.jsx
+│   └── TeamDetailModal.jsx
+│
+├── context
+│   ├── AuthContext.jsx
+│   └── ToastContext.jsx
+│
+├── pages
+│   ├── AuthPage.jsx
+│   ├── BoardPage.jsx
+│   ├── MyPage.jsx
+│   └── TeamMatchPage.jsx
+│
+├── styles
+│   ├── global.css
+│   └── tokens.css
+│
+├── App.jsx
+├── main.jsx
+└── vite.config.js
+```
+
+---
+
+# 프로젝트 특징
+
+- React Context를 이용한 로그인 상태 관리
+- Fetch Wrapper를 이용한 API 통신
+- JWT 기반 인증
+- Toast 알림 시스템
+- 공용 Modal 컴포넌트
+- 정원 Gauge UI
+- 잡코리아 스타일의 모임 리스트 UI
+- 반응형 레이아웃
+
+---
+
+# 향후 개발 계획
+
+- 게시판 CRUD
+- 댓글 기능
+- 내가 만든 모임
+- 내가 신청한 모임
+- 프로필 수정
+- Refresh Token 적용
+- Access Token 자동 재발급
+- 이미지 업로드
+- 검색 기능
+- 무한 스크롤
+- 알림 기능
+
+---
+
+# 개발 환경
+
+| 항목 | 버전 |
+|------|------|
+| Node.js | 20+ 권장 |
+| npm | 10+ |
+| React | Vite 기반 |
+| Backend | Spring Boot |
+| Database | MySQL |
