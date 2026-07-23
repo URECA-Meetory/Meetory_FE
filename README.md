@@ -114,8 +114,11 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 - 모임 신청
 - 리더 전용 신청 승인 / 거절
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" />
-<img width="900" height="450" alt="image" src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" />
-<img width="900" height="450" alt="image" src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" width="45%">
+  &nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" width="45%">
+</p>
 
 ---
 
