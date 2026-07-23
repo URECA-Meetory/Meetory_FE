@@ -99,4 +99,13 @@ export const messageApi = {
     request(`/messages/threads/${threadId}/reply`, { method: "POST", body: payload, auth: true }),
 };
 
+// ---------------- Boards ----------------
+export const boardApi = {
+  list: () => request("/boards", { auth: true }),
+  detail: (boardId) => request(`/boards/${boardId}`, { auth: true }),
+  create: (payload) => request("/boards", { method: "POST", body: payload, auth: true }),
+  update: (boardId, payload) => request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true }),
+  delete: (boardId) => request(`/boards/${boardId}`, { method: "DELETE", auth: true }),
+};
+
 export { ApiError };
