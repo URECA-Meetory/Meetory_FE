@@ -12,9 +12,6 @@ export default function TeamCard({ team, onOpen, onApply, onInquiry, applyDisabl
           <span className={`badge ${isOpen ? "badge-open" : "badge-closed"}`}>{isOpen ? team.status : "모집완료"}</span>
         </div>
         <div className="summary">{team.summary}</div>
-        <div className="meta">
-          <span>개설자 {team.leaderNickname}</span>
-        </div>
       </div>
       <div className="side">
         <Gauge current={team.currentMembers} max={team.maxMembers} />
