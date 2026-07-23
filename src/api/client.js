@@ -85,4 +85,13 @@ export const teamApi = {
   leave: (teamId) => request(`/teams/${teamId}/leave`, { method: "DELETE", auth: true }),
 };
 
+// ---------------- Boards ----------------
+export const boardApi = {
+  list: () => request("/boards", { auth: true }),
+  detail: (boardId) => request(`/boards/${boardId}`, { auth: true }),
+  create: (payload) => request("/boards", { method: "POST", body: payload, auth: true }),
+  update: (boardId, payload) => request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true }),
+  delete: (boardId) => request(`/boards/${boardId}`, { method: "DELETE", auth: true }),
+};
+
 export { ApiError };
