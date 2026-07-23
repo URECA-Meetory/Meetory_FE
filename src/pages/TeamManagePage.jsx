@@ -55,8 +55,7 @@ export default function TeamManagePage() {
         {!loading && error && <div className="empty-state">{error}</div>}
 
         {!loading && !error && teams.length === 0 && (
-          <div className="empty-state">
-            <div className="glyph">＋</div>
+          <div className="empty-state simple-empty">
             아직 속한 모임이 없습니다. 모임 모집에서 관심있는 모임에 신청해보세요.
           </div>
         )}
