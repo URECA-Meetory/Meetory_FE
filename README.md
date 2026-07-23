@@ -68,6 +68,7 @@ Spring Boot Backend와 REST API를 통해 통신하며 모임 생성, 참여, �
 
 ## 모임 모집
 - 리더 전용 신청 승인 / 거절
+- 현재 내가 속한 모임 조회
 
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/db98d4dd-e169-4d79-a251-01772789781c" />
 <img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/164236c2-134d-4bf0-8be4-9f5bb6b7771e" />
