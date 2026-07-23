@@ -1,6 +1,6 @@
 import Gauge from "./Gauge.jsx";
 
-export default function TeamCard({ team, onOpen, onApply, applyDisabled }) {
+export default function TeamCard({ team, onOpen, onApply, onInquiry, applyDisabled }) {
   const isOpen = team.status === "모집중" && team.currentMembers < team.maxMembers;
 
   return (
@@ -12,22 +12,30 @@ export default function TeamCard({ team, onOpen, onApply, applyDisabled }) {
           <span className={`badge ${isOpen ? "badge-open" : "badge-closed"}`}>{isOpen ? team.status : "모집완료"}</span>
         </div>
         <div className="summary">{team.summary}</div>
-        <div className="meta">
-          <span>개설자 {team.leaderNickname}</span>
-        </div>
       </div>
       <div className="side">
         <Gauge current={team.currentMembers} max={team.maxMembers} />
-        <button
-          className="btn btn-primary btn-sm"
-          disabled={!isOpen || applyDisabled}
-          onClick={(e) => {
-            e.stopPropagation();
-            onApply(team.teamId);
-          }}
-        >
-          {isOpen ? "신청하기" : "모집 마감"}
-        </button>
+        <div className="side-actions">
+          <button
+            className="btn btn-inquiry btn-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onInquiry(team.teamId, team.title);
+            }}
+          >
+            문의하기
+          </button>
+          <button
+            className="btn btn-primary btn-sm"
+            disabled={!isOpen || applyDisabled}
+            onClick={(e) => {
+              e.stopPropagation();
+              onApply(team.teamId);
+            }}
+          >
+            {isOpen ? "신청하기" : "모집 마감"}
+          </button>
+        </div>
       </div>
     </div>
   );

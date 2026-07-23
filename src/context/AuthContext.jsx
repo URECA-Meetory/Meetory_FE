@@ -1,17 +1,17 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
-import { authApi, clearSession, getStoredUser, getToken, storeSession } from "../api/client.js";
+import { authApi, clearSession, getStoredUser, storeSession } from "../api/client.js";
 
 const AuthContext = createContext(null);
+const TAB_KEY = "meetory.currentTab";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    // 토큰이 없으면 저장된 유저 정보도 신뢰하지 않는다.
-    return getToken() ? getStoredUser() : null;
-  });
+  // 새로고침 후에도 저장된 세션이 있으면 로그인 상태를 복원한다.
+  const [user, setUser] = useState(() => getStoredUser());
 
   const login = useCallback(async (email, password) => {
     const data = await authApi.login({ email, password });
     storeSession(data.accessToken, data.userId, data.nickname);
+    sessionStorage.setItem(TAB_KEY, "teams");
     setUser({ userId: data.userId, nickname: data.nickname });
     return data;
   }, []);
@@ -27,6 +27,7 @@ export function AuthProvider({ children }) {
       // 서버 로그아웃이 실패하더라도 클라이언트 세션은 정리한다.
     } finally {
       clearSession();
+      sessionStorage.removeItem(TAB_KEY);
       setUser(null);
     }
   }, []);

@@ -12,22 +12,31 @@ export default function AuthPage() {
         <span className="wordmark">Meetory</span>
         <div>
           <h1>
-            같이 할 사람을 찾는 가장 빠른 방법.
             <br />
-            <span className="em">스터디, 독서, 운동</span> — 모임을 올리고, 신청받고, 시작하세요.
+            <br />
+            <br />
+            <br />
+            사람을 만나고, 
+            <br />
+            함께 추억을 만들어가는 공간
+            <br />
+            <span className="em">모든 만남에는 하나의 이야기가 있습니다.</span>
+            <br />
+            <br />
+            <br />
           </h1>
-          <div className="auth-stat-row" style={{ marginTop: 40 }}>
+          <div className="auth-stat-row" style={{ marginTop: 40,  justifySelf: "end" }}>
             <div>
               <div className="stat-num">01</div>
-              <div className="stat-label">모임을 개설한다</div>
+              <div className="stat-label">모임 개설 및 신청</div>
             </div>
             <div>
               <div className="stat-num">02</div>
-              <div className="stat-label">신청서가 쌓인다</div>
+              <div className="stat-label">수락/거절 및 문의</div>
             </div>
             <div>
               <div className="stat-num">03</div>
-              <div className="stat-label">리더가 수락한다</div>
+              <div className="stat-label">모임 참여</div>
             </div>
           </div>
         </div>

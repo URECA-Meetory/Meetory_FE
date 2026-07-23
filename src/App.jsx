@@ -9,21 +9,35 @@ import TeamManagePage from "./pages/TeamManagePage.jsx";
 import UserMenu from "./components/UserMenu.jsx";
 
 const TABS = [
-  { key: "teams", label: "팀 매칭" },
+  { key: "teams", label: "모임 모집" },
   { key: "board", label: "게시판" },
 ];
+const TAB_KEY = "meetory.currentTab";
+
+function getInitialTab() {
+  const saved = sessionStorage.getItem(TAB_KEY);
+  return saved || "teams";
+}
 
 function Shell() {
   const { user } = useAuth();
-  const [tab, setTab] = useState("teams");
+  const [tab, setTab] = useState(getInitialTab);
   const prevUserId = useRef(null);
 
-  // 로그인할 때마다 항상 팀 매칭 탭으로 이동
+  useEffect(() => {
+    sessionStorage.setItem(TAB_KEY, tab);
+  }, [tab]);
+
+  // 새 로그인 시에는 최초 기본 탭만 '모임 모집'으로 보장하고,
+  // 새로고침 시에는 저장된 현재 탭을 유지한다.
   useEffect(() => {
     const currentId = user?.userId ?? null;
-    if (currentId && currentId !== prevUserId.current) {
+    const hasSavedTab = Boolean(sessionStorage.getItem(TAB_KEY));
+
+    if (currentId && currentId !== prevUserId.current && !hasSavedTab) {
       setTab("teams");
     }
+
     prevUserId.current = currentId;
   }, [user]);
 
@@ -34,7 +48,7 @@ function Shell() {
       <header className="topbar">
         <div className="brand">
           <span className="wordmark">Meetory</span>
-          <span className="tagline">MEETUP MATCHING</span>
+          <span className="tagline">MEETUP Story</span>
         </div>
 
         <nav className="tabs">

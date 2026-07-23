@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import TeamCard from "../components/TeamCard.jsx";
 import CreateTeamModal from "../components/CreateTeamModal.jsx";
 import TeamDetailModal from "../components/TeamDetailModal.jsx";
+import InquiryModal from "../components/InquiryModal.jsx";
 import { teamApi, ApiError } from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useToast } from "../context/ToastContext.jsx";
@@ -18,6 +19,7 @@ export default function TeamMatchPage() {
   const [category, setCategory] = useState("전체");
   const [showCreate, setShowCreate] = useState(false);
   const [openTeamId, setOpenTeamId] = useState(null);
+  const [inquiryTarget, setInquiryTarget] = useState(null); // { teamId, teamTitle }
 
   async function load() {
     setLoading(true);
@@ -55,11 +57,19 @@ export default function TeamMatchPage() {
     }
   }
 
+  function openInquiry(teamId, teamTitle) {
+    if (!user) {
+      toast("로그인 후 문의할 수 있습니다.", "err");
+      return;
+    }
+    setInquiryTarget({ teamId, teamTitle });
+  }
+
   return (
     <main className="view">
       <div className="view-head">
         <div>
-          <div className="eyebrow">Team Matching</div>
+          <div className="eyebrow">Now recruiting</div>
           <h1>모집중인 모임</h1>
           <p className="sub">관심 있는 모임의 설명을 눌러 자세히 살펴보세요.</p>
         </div>
@@ -113,7 +123,7 @@ export default function TeamMatchPage() {
       {!loading && !error && filtered.length > 0 && (
         <div className="team-list">
           {filtered.map((team) => (
-            <TeamCard key={team.teamId} team={team} onOpen={setOpenTeamId} onApply={quickApply} />
+            <TeamCard key={team.teamId} team={team} onOpen={setOpenTeamId} onApply={quickApply} onInquiry={openInquiry} />
           ))}
         </div>
       )}
@@ -130,7 +140,20 @@ export default function TeamMatchPage() {
       )}
 
       {openTeamId && (
-        <TeamDetailModal teamId={openTeamId} onClose={() => setOpenTeamId(null)} onChanged={load} />
+        <TeamDetailModal
+          teamId={openTeamId}
+          onClose={() => setOpenTeamId(null)}
+          onChanged={load}
+          onInquiry={openInquiry}
+        />
+      )}
+
+      {inquiryTarget && (
+        <InquiryModal
+          teamId={inquiryTarget.teamId}
+          teamTitle={inquiryTarget.teamTitle}
+          onClose={() => setInquiryTarget(null)}
+        />
       )}
     </main>
   );

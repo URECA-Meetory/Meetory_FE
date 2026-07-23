@@ -1,0 +1,198 @@
+/* =========================================================================
+   모임장 문의(쪽지) 기능 전용 스타일
+   - global.css 상단에 @import "./messages.css"; 한 줄만 추가하면 됩니다.
+   - tokens.css 에서 정의된 색상/폰트 변수를 그대로 재사용해 기존 테마와 통일감을 줍니다.
+   ========================================================================= */
+
+/* ---------------------------------- 마이페이지 그리드 (내 정보 + 쪽지함, 좌우로 넉넉하게 분리) ---------------------------------- */
+.mypage-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  gap: 48px;
+  max-width: 980px;
+  margin: 0 auto;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .mypage-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+.mypage-grid .mypage-card { max-width: none; margin: 0; }
+
+.inbox-card { display: flex; flex-direction: column; gap: 4px; }
+.inbox-head { display: flex; align-items: center; gap: 8px; color: var(--accent); margin-bottom: 6px; }
+.inbox-head h2 { font-family: var(--font-display); font-size: 18px; margin: 0; color: var(--ink); }
+
+/* ---------------------------------- 안읽음 / 읽음 섹션 박스 ---------------------------------- */
+.inbox-section {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+}
+.inbox-section.has-unread {
+  border-color: rgba(227, 167, 58, 0.3);
+  background: rgba(227, 167, 58, 0.04);
+}
+.inbox-section-label {
+  display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700;
+  color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px;
+}
+
+/* ---------------------------------- 쪽지 카드 리스트 (모임 관리 카드처럼) ---------------------------------- */
+.msg-list { display: flex; flex-direction: column; gap: 8px; }
+.msg-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--paper); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px;
+  padding: 13px 16px; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease), border-color .15s var(--ease);
+}
+.msg-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+  border-color: var(--accent-border, rgba(227,167,58,0.4));
+}
+.msg-card.unread {
+  border-color: rgba(227, 167, 58, 0.5);
+  background: linear-gradient(180deg, rgba(227,167,58,0.08), var(--paper) 60%);
+}
+.msg-card-body {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+  flex: 1;
+  justify-content: space-between;
+}
+.msg-card-title {
+  font-size: 13.5px; font-weight: 700; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  flex: 1; min-width: 0;
+}
+.msg-card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.msg-card .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.msg-card-arrow { color: var(--ink-soft); font-size: 15px; opacity: .6; transition: transform .15s var(--ease); }
+.msg-card:hover .msg-card-arrow { transform: translateX(2px); opacity: 1; color: var(--accent); }
+
+.btn-more {
+  margin-top: 10px; width: 100%; padding: 9px; border-radius: 8px;
+  border: 1px dashed var(--line-strong); background: transparent; color: var(--text-soft);
+  font-size: 12.5px; cursor: pointer; transition: all .15s var(--ease);
+}
+.btn-more:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------------------------------- 팀 카드 / 상세 팝업 - 문의하기 버튼 ---------------------------------- */
+.side-actions { display: flex; gap: 6px; }
+.modal-actions-row { display: flex; gap: 10px; }
+.btn-inquiry {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--text-soft);
+}
+.btn-inquiry:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------------------------------- 문의하기(쪽지 최초 전송) 모달 ---------------------------------- */
+.inquiry-target {
+  font-size: 12.5px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
+
+/* ---------------------------------- 쪽지 대화 모달 (Modal 컴포넌트 내부, 카카오톡 스타일) ---------------------------------- */
+.chat-body-inline {
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 14px;
+  padding: 12px 10px 12px 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+    rgba(6, 10, 15, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), inset 0 -1px 0 rgba(0,0,0,0.34);
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(227, 167, 58, 0.65) transparent;
+}
+.chat-body-inline::-webkit-scrollbar { width: 8px; }
+.chat-body-inline::-webkit-scrollbar-track { background: transparent; }
+.chat-body-inline::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background: linear-gradient(180deg, rgba(227,167,58,0.9), rgba(227,167,58,0.35));
+  background-clip: padding-box;
+}
+.chat-body-inline::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(227,167,58,1), rgba(227,167,58,0.55));
+  background-clip: padding-box;
+}
+
+.chat-row { display: flex; }
+.chat-row.theirs { justify-content: flex-start; }
+.chat-row.mine { justify-content: flex-end; }
+
+.chat-bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  max-width: 76%;
+  padding: 2px 2px 0;
+}
+.chat-row.theirs .chat-bubble-wrap { align-items: flex-start; }
+.chat-row.mine .chat-bubble-wrap { align-items: flex-end; }
+
+.chat-sender-name {
+  font-size: 11.5px; font-weight: 600; color: var(--ink-soft);
+  padding: 0 2px; margin-bottom: 4px;
+}
+
+.chat-bubble {
+  padding: 10px 14px; border-radius: 16px; font-size: 13.5px; line-height: 1.55;
+  white-space: pre-wrap; word-break: break-word;
+  background: rgba(255, 255, 255, 0.07); color: var(--ink);
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 4px 14px -10px rgba(0,0,0,0.75);
+}
+.chat-row.mine .chat-bubble {
+  background: linear-gradient(180deg, rgba(227,167,58,0.92), rgba(227,167,58,0.86));
+  color: var(--accent-ink);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+
+/* 말풍선 '바깥', 오른쪽 아래에 작게 표시되는 시간 */
+.chat-time {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+  align-self: flex-end;
+  padding: 0 3px;
+}
+
+.chat-input-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(27,35,48,0), rgba(27,35,48,0.95) 24%);
+  z-index: 1;
+}
+.chat-input-row input {
+  flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line-strong); color: var(--ink);
+  border-radius: 999px; padding: 10px 16px; font-size: 13.5px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.chat-input-row input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(227,167,58,0.16); }
+.chat-input-row input:disabled { opacity: .6; }
+
+.chat-send-btn {
+  width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--accent); color: var(--accent-ink);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+  transition: background .15s var(--ease), transform .15s var(--ease), box-shadow .15s var(--ease);
+  box-shadow: 0 8px 18px -10px rgba(227,167,58,0.85);
+}
+.chat-send-btn:hover:not(:disabled) { background: var(--accent-strong); transform: scale(1.05); }
+.chat-send-btn:disabled { opacity: .4; cursor: not-allowed; }

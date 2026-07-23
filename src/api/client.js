@@ -85,4 +85,18 @@ export const teamApi = {
   leave: (teamId) => request(`/teams/${teamId}/leave`, { method: "DELETE", auth: true }),
 };
 
+// ---------------- Messages (모임장 문의 쪽지) ----------------
+export const messageApi = {
+  // 팀 매칭 화면 "문의하기" -> 모임 리더에게 최초 쪽지 전송
+  sendInquiry: (teamId, payload) =>
+    request(`/messages/teams/${teamId}/inquiry`, { method: "POST", body: payload, auth: true }),
+  // 마이페이지 - 내 쪽지함(안읽음/읽음)
+  inbox: () => request("/messages/threads", { auth: true }),
+  // 쪽지 클릭 -> 채팅형 대화 전체 (읽음 처리 포함)
+  threadDetail: (threadId) => request(`/messages/threads/${threadId}`, { auth: true }),
+  // 채팅 입력창 -> 전송(답장)
+  reply: (threadId, payload) =>
+    request(`/messages/threads/${threadId}/reply`, { method: "POST", body: payload, auth: true }),
+};
+
 export { ApiError };

@@ -87,7 +87,7 @@ export default function TeamManageModal({ teamId, onClose, onChanged }) {
           <div className="detail-grid">
             <dt>카테고리</dt>
             <dd>{detail.category}</dd>
-            <dt>개설자</dt>
+            <dt>모임장</dt>
             <dd>{detail.leaderNickname}</dd>
             <dt>인원</dt>
             <dd>
@@ -119,9 +119,7 @@ export default function TeamManageModal({ teamId, onClose, onChanged }) {
             <ul className="member-list">
               {members.map((m) => (
                 <li key={m.memberId}>
-                  <span>
-                    {m.nickname} <span className="m-id">#{m.userId}</span>
-                  </span>
+                  <span>{m.nickname}</span>
                   <span className="m-date">가입일 {formatDate(m.joinedAt)}</span>
                 </li>
               ))}
