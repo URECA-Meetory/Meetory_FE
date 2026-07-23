@@ -106,7 +106,10 @@ main.view { flex: 1; padding: 32px 28px 80px; max-width: 1080px; width: 100%; ma
     radial-gradient(circle at 80% 80%, rgba(79,169,140,0.12), transparent 50%),
     var(--bg-soft);
   padding: 64px 56px;
-  display: flex; flex-direction: column; justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
   border-right: 1px solid var(--line);
   position: relative; overflow: hidden;
 }
@@ -115,15 +118,47 @@ main.view { flex: 1; padding: 32px 28px 80px; max-width: 1080px; width: 100%; ma
   background-image: radial-gradient(rgba(237,234,224,0.06) 1px, transparent 1px);
   background-size: 22px 22px; pointer-events: none;
 }
-.auth-hero .wordmark { font-size: 40px; color: var(--accent); position: relative; z-index: 1; }
-.auth-hero h1 {
-  font-family: var(--font-display); font-size: 34px; line-height: 1.35; font-weight: 500;
-  color: var(--paper); max-width: 460px; margin: 40px 0 0; position: relative; z-index: 1;
+.auth-hero .wordmark {
+  font-size: 40px;
+  color: var(--accent);
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.02em;
 }
-.auth-hero .em { color: var(--accent); font-style: italic; }
-.auth-stat-row { display: flex; gap: 28px; position: relative; z-index: 1; }
-.auth-stat-row .stat-num { font-family: var(--font-mono); font-size: 26px; color: var(--paper); }
-.auth-stat-row .stat-label { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
+.auth-hero h1 {
+  font-family: var(--font-display); font-size: 34px; line-height: 1.45; font-weight: 500;
+  color: #efe8dc; max-width: 520px; margin: 18px 0 0; position: relative; z-index: 1;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.auth-hero h1 span {
+  display: block;
+}
+.auth-hero .em {
+  color: #cfc3a9;
+  font-style: italic;
+  font-size: 0.95em;
+  display: inline-block;
+  max-width: 520px;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+.auth-stat-row {
+  display: flex;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  align-self: flex-end;
+  padding-top: 44px;
+}
+.auth-stat-row .stat-num { font-family: var(--font-mono); font-size: 26px; color: #cbc4b2; }
+.auth-stat-row .stat-label {
+  font-size: 13px; color: #aba59a; margin-top: 4px; line-height: 1.5;
+  opacity: 0.98;
+}
 
 .auth-panel {
   display: flex; align-items: center; justify-content: center; padding: 40px;
