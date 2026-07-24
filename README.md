@@ -112,7 +112,7 @@ Meetory는 관심사가 같은 사람들을 연결해주는 모임 플랫폼입�
 - 모임 신청
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" width="49%">
+<img src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" width="100%">
 <img src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" width="49%">
 </p>
 
