@@ -32,7 +32,9 @@ export default function OnboardingPage() {
       });
       toast("프로필이 저장되었습니다. 환영합니다!", "ok");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "프로필 저장에 실패했습니다");
+      setError(
+        err instanceof ApiError ? err.message : "프로필 저장에 실패했습니다"
+      );
     } finally {
       setLoading(false);
     }

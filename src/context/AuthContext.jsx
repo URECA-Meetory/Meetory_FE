@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
+  ApiError,
   authApi,
   clearSession,
   getAuthEpoch,
@@ -154,15 +155,73 @@ export function AuthProvider({ children }) {
     }
   }, [clearAuth]);
 
-  const completeOnboarding = useCallback(async (payload) => {
-    const profile = await userApi.completeOnboarding(payload);
-    return applyProfile(profile);
-  }, [applyProfile]);
+  const applyOnboardingProfile = useCallback(
+    (profile) => applyProfile({ ...profile, onboardingCompleted: true }),
+    [applyProfile]
+  );
+
+  const finishOnboardingLocally = useCallback(() => {
+    const base = user ?? getStoredUser();
+    if (!base?.userId || !getToken()) return null;
+    const nextUser = { ...normalizeUser(base), onboardingCompleted: true };
+    storeSession(getToken(), nextUser);
+    setUser(nextUser);
+    return nextUser;
+  }, [user]);
+
+  const revertOnboardingLocally = useCallback(
+    (snapshot) => {
+      if (!snapshot) return;
+      storeSession(getToken(), snapshot);
+      setUser(snapshot);
+    },
+    []
+  );
+
+  const completeOnboarding = useCallback(
+    async (payload) => {
+      nextAuthEpoch();
+      const snapshot = user ? normalizeUser(user) : null;
+      const local = finishOnboardingLocally();
+      if (!local) throw new Error("로그인 세션이 없습니다.");
+
+      try {
+        const profile = await userApi.completeOnboarding(payload);
+        return applyOnboardingProfile(profile);
+      } catch (error) {
+        if (
+          error instanceof ApiError &&
+          (error.status === 401 || error.status === 404 || error.status === 0)
+        ) {
+          return local;
+        }
+        revertOnboardingLocally(snapshot);
+        throw error;
+      }
+    },
+    [user, finishOnboardingLocally, applyOnboardingProfile, revertOnboardingLocally]
+  );
 
   const skipOnboarding = useCallback(async () => {
-    const profile = await userApi.skipOnboarding();
-    return applyProfile(profile);
-  }, [applyProfile]);
+    nextAuthEpoch();
+    const snapshot = user ? normalizeUser(user) : null;
+    const local = finishOnboardingLocally();
+    if (!local) throw new Error("로그인 세션이 없습니다.");
+
+    try {
+      const profile = await userApi.skipOnboarding();
+      return applyOnboardingProfile(profile);
+    } catch (error) {
+      if (
+        error instanceof ApiError &&
+        (error.status === 401 || error.status === 404 || error.status === 0)
+      ) {
+        return local;
+      }
+      revertOnboardingLocally(snapshot);
+      throw error;
+    }
+  }, [user, finishOnboardingLocally, applyOnboardingProfile, revertOnboardingLocally]);
 
   const updateNickname = useCallback(async (nickname) => {
     const profile = await userApi.updateNickname(nickname);

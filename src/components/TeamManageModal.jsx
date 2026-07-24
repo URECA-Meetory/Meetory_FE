@@ -16,6 +16,8 @@ export default function TeamManageModal({ teamId, onClose, onChanged }) {
   const [error, setError] = useState("");
   const [leaving, setLeaving] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const isLeader = user && detail && user.userId === detail.leaderId;
 
@@ -71,6 +73,21 @@ export default function TeamManageModal({ teamId, onClose, onChanged }) {
     }
   }
 
+  async function handleDelete() {
+    setDeleting(true);
+    try {
+      await teamApi.remove(teamId);
+      toast("모임이 삭제되었습니다. 멤버에게 안내 쪽지가 발송되었습니다.", "ok");
+      setConfirmDelete(false);
+      onChanged();
+      onClose();
+    } catch (err) {
+      toast(err instanceof ApiError ? err.message : "모임 삭제에 실패했습니다", "err");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
     <Modal onClose={onClose} wide>
       {loading && (
@@ -107,6 +124,14 @@ export default function TeamManageModal({ teamId, onClose, onChanged }) {
             <div className="modal-actions">
               <button className="btn btn-danger-outline" onClick={() => setConfirmLeave(true)}>
                 모임 탈퇴
+              </button>
+            </div>
+          )}
+
+          {isLeader && (
+            <div className="modal-actions">
+              <button className="btn btn-danger-outline" onClick={() => setConfirmDelete(true)}>
+                모임 삭제
               </button>
             </div>
           )}
@@ -157,6 +182,30 @@ export default function TeamManageModal({ teamId, onClose, onChanged }) {
             </>
           )}
         </>
+      )}
+
+      {confirmDelete && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setConfirmDelete(false);
+          }}
+        >
+          <div className="modal-card confirm-card">
+            <div className="modal-title">모임을 삭제하시겠습니까?</div>
+            <p className="modal-desc">
+              삭제하면 멤버는 자동으로 탈퇴되며, 마이페이지 쪽지함으로 안내 메시지가 발송됩니다. 되돌릴 수 없습니다.
+            </p>
+            <div className="modal-actions">
+              <button className="btn btn-secondary" onClick={() => setConfirmDelete(false)}>
+                돌아가기
+              </button>
+              <button className="btn btn-danger-outline" disabled={deleting} onClick={handleDelete}>
+                {deleting ? "삭제 중..." : "삭제하기"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {confirmLeave && (

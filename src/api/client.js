@@ -51,7 +51,10 @@ async function request(path, { method = "GET", body, auth = false, skipAuthRedir
   const headers = { "Content-Type": "application/json" };
   if (auth) {
     const token = getToken();
-    if (token) headers["Authorization"] = "Bearer " + token;
+    if (!token) {
+      throw new ApiError("로그인이 필요합니다. 다시 로그인해주세요.", 401);
+    }
+    headers["Authorization"] = "Bearer " + token;
   }
 
   let res;
@@ -78,7 +81,12 @@ async function request(path, { method = "GET", body, auth = false, skipAuthRedir
         onUnauthorized();
       }
     }
-    const message = json?.message || `요청에 실패했습니다 (${res.status})`;
+    let message = json?.message || `요청에 실패했습니다 (${res.status})`;
+    if (res.status === 401 && !auth && (path === "/boards" || path.startsWith("/boards/"))) {
+      message = "게시판 API 인증 오류입니다. IDE 백엔드를 끄고 최신 백엔드(8080)를 실행해주세요.";
+    } else if (res.status === 401 && path.startsWith("/users/me")) {
+      message = "로그인 세션이 만료되었거나 백엔드 버전이 맞지 않습니다. localStorage를 지우고 최신 백엔드로 다시 로그인해주세요.";
+    }
     throw new ApiError(message, res.status);
   }
   return json?.data;
@@ -103,10 +111,10 @@ export const userApi = {
       body: { currentPassword, newPassword },
       auth: true,
     }),
-  completeOnboarding: (payload) =>
-    request("/users/me/onboarding", { method: "PUT", body: payload, auth: true }),
-  skipOnboarding: () =>
-    request("/users/me/onboarding/skip", { method: "POST", auth: true }),
+  completeOnboarding: (payload, { skipAuthRedirect = true } = {}) =>
+    request("/users/me/onboarding", { method: "PUT", body: payload, auth: true, skipAuthRedirect }),
+  skipOnboarding: ({ skipAuthRedirect = true } = {}) =>
+    request("/users/me/onboarding/skip", { method: "POST", auth: true, skipAuthRedirect }),
   deleteAccount: (password) =>
     request("/users/me", { method: "DELETE", body: { password }, auth: true, skipAuthRedirect: true }),
 };
@@ -115,10 +123,12 @@ export const userApi = {
 export const boardApi = {
   list: () => request("/boards"),
   detail: (boardId) => request(`/boards/${boardId}`),
-  create: (payload) => request("/boards", { method: "POST", body: payload, auth: true }),
+  create: (payload) =>
+    request("/boards", { method: "POST", body: payload, auth: true, skipAuthRedirect: true }),
   update: (boardId, payload) =>
-    request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true }),
-  remove: (boardId) => request(`/boards/${boardId}`, { method: "DELETE", auth: true }),
+    request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true, skipAuthRedirect: true }),
+  remove: (boardId) =>
+    request(`/boards/${boardId}`, { method: "DELETE", auth: true, skipAuthRedirect: true }),
 };
 
 // ---------------- Teams ----------------
@@ -135,6 +145,23 @@ export const teamApi = {
   reject: (teamId, memberId) =>
     request(`/teams/${teamId}/applications/${memberId}/reject`, { method: "POST", auth: true }),
   leave: (teamId) => request(`/teams/${teamId}/leave`, { method: "DELETE", auth: true }),
+  remove: (teamId) =>
+    request(`/teams/${teamId}`, { method: "DELETE", auth: true, skipAuthRedirect: true }),
 };
 
 export { ApiError };
+
+export async function checkBackendHealth() {
+  try {
+    const data = await request("/health");
+    const features = data?.features ?? [];
+    return {
+      ok: data?.status === "ok",
+      version: data?.version ?? null,
+      hasBoards: features.includes("boards"),
+      hasOnboarding: features.includes("onboarding"),
+    };
+  } catch {
+    return { ok: false, version: null, hasBoards: false, hasOnboarding: false };
+  }
+}
