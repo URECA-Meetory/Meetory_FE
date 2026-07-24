@@ -129,6 +129,10 @@ export const boardApi = {
     request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true, skipAuthRedirect: true }),
   remove: (boardId) =>
     request(`/boards/${boardId}`, { method: "DELETE", auth: true, skipAuthRedirect: true }),
+  createComment: (boardId, payload) =>
+    request(`/boards/${boardId}/comments`, { method: "POST", body: payload, auth: true, skipAuthRedirect: true }),
+  deleteComment: (boardId, commentId) =>
+    request(`/boards/${boardId}/comments/${commentId}`, { method: "DELETE", auth: true, skipAuthRedirect: true }),
 };
 
 // ---------------- Teams ----------------
