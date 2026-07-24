@@ -13,9 +13,9 @@ export function getStoredUser() {
   return raw ? JSON.parse(raw) : null;
 }
 
-export function storeSession(accessToken, userId, nickname) {
+export function storeSession(accessToken, user) {
   localStorage.setItem(TOKEN_KEY, accessToken);
-  localStorage.setItem(USER_KEY, JSON.stringify({ userId, nickname }));
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function clearSession() {
@@ -30,11 +30,31 @@ class ApiError extends Error {
   }
 }
 
-async function request(path, { method = "GET", body, auth = false } = {}) {
+let onUnauthorized = null;
+let authEpoch = 0;
+
+export function nextAuthEpoch() {
+  authEpoch += 1;
+  return authEpoch;
+}
+
+export function getAuthEpoch() {
+  return authEpoch;
+}
+
+export function setUnauthorizedHandler(handler) {
+  onUnauthorized = handler;
+}
+
+async function request(path, { method = "GET", body, auth = false, skipAuthRedirect = false } = {}) {
+  const requestEpoch = getAuthEpoch();
   const headers = { "Content-Type": "application/json" };
   if (auth) {
     const token = getToken();
-    if (token) headers["Authorization"] = "Bearer " + token;
+    if (!token) {
+      throw new ApiError("로그인이 필요합니다. 다시 로그인해주세요.", 401);
+    }
+    headers["Authorization"] = "Bearer " + token;
   }
 
   let res;
@@ -44,7 +64,7 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
-  } catch (networkErr) {
+  } catch {
     throw new ApiError("서버에 연결할 수 없습니다. 백엔드(8080)가 실행 중인지 확인해주세요.", 0);
   }
 
@@ -56,7 +76,17 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
   }
 
   if (!res.ok) {
-    const message = json?.message || `요청에 실패했습니다 (${res.status})`;
+    if (res.status === 401 && auth && !skipAuthRedirect && onUnauthorized) {
+      if (requestEpoch === getAuthEpoch()) {
+        onUnauthorized();
+      }
+    }
+    let message = json?.message || `요청에 실패했습니다 (${res.status})`;
+    if (res.status === 401 && !auth && (path === "/boards" || path.startsWith("/boards/"))) {
+      message = "게시판 API 인증 오류입니다. IDE 백엔드를 끄고 최신 백엔드(8080)를 실행해주세요.";
+    } else if (res.status === 401 && path.startsWith("/users/me")) {
+      message = "로그인 세션이 만료되었거나 백엔드 버전이 맞지 않습니다. localStorage를 지우고 최신 백엔드로 다시 로그인해주세요.";
+    }
     throw new ApiError(message, res.status);
   }
   return json?.data;
@@ -66,7 +96,39 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
 export const authApi = {
   signup: (payload) => request("/auth/signup", { method: "POST", body: payload }),
   login: (payload) => request("/auth/login", { method: "POST", body: payload }),
-  logout: () => request("/auth/logout", { method: "POST", auth: true }),
+  logout: () => request("/auth/logout", { method: "POST", auth: true, skipAuthRedirect: true }),
+};
+
+// ---------------- Profile ----------------
+export const userApi = {
+  getProfile: ({ skipAuthRedirect = false } = {}) =>
+    request("/users/me", { auth: true, skipAuthRedirect }),
+  updateNickname: (nickname) =>
+    request("/users/me", { method: "PATCH", body: { nickname }, auth: true }),
+  updatePassword: (currentPassword, newPassword) =>
+    request("/users/me/password", {
+      method: "PUT",
+      body: { currentPassword, newPassword },
+      auth: true,
+    }),
+  completeOnboarding: (payload, { skipAuthRedirect = true } = {}) =>
+    request("/users/me/onboarding", { method: "PUT", body: payload, auth: true, skipAuthRedirect }),
+  skipOnboarding: ({ skipAuthRedirect = true } = {}) =>
+    request("/users/me/onboarding/skip", { method: "POST", auth: true, skipAuthRedirect }),
+  deleteAccount: (password) =>
+    request("/users/me", { method: "DELETE", body: { password }, auth: true, skipAuthRedirect: true }),
+};
+
+// ---------------- Boards ----------------
+export const boardApi = {
+  list: () => request("/boards"),
+  detail: (boardId) => request(`/boards/${boardId}`),
+  create: (payload) =>
+    request("/boards", { method: "POST", body: payload, auth: true, skipAuthRedirect: true }),
+  update: (boardId, payload) =>
+    request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true, skipAuthRedirect: true }),
+  remove: (boardId) =>
+    request(`/boards/${boardId}`, { method: "DELETE", auth: true, skipAuthRedirect: true }),
 };
 
 // ---------------- Teams ----------------
@@ -83,6 +145,8 @@ export const teamApi = {
   reject: (teamId, memberId) =>
     request(`/teams/${teamId}/applications/${memberId}/reject`, { method: "POST", auth: true }),
   leave: (teamId) => request(`/teams/${teamId}/leave`, { method: "DELETE", auth: true }),
+  remove: (teamId) =>
+    request(`/teams/${teamId}`, { method: "DELETE", auth: true, skipAuthRedirect: true }),
 };
 
 // ---------------- Messages (모임장 문의 쪽지) ----------------
@@ -99,13 +163,19 @@ export const messageApi = {
     request(`/messages/threads/${threadId}/reply`, { method: "POST", body: payload, auth: true }),
 };
 
-// ---------------- Boards ----------------
-export const boardApi = {
-  list: () => request("/boards", { auth: true }),
-  detail: (boardId) => request(`/boards/${boardId}`, { auth: true }),
-  create: (payload) => request("/boards", { method: "POST", body: payload, auth: true }),
-  update: (boardId, payload) => request(`/boards/${boardId}`, { method: "PUT", body: payload, auth: true }),
-  delete: (boardId) => request(`/boards/${boardId}`, { method: "DELETE", auth: true }),
-};
-
 export { ApiError };
+
+export async function checkBackendHealth() {
+  try {
+    const data = await request("/health");
+    const features = data?.features ?? [];
+    return {
+      ok: data?.status === "ok",
+      version: data?.version ?? null,
+      hasBoards: features.includes("boards"),
+      hasOnboarding: features.includes("onboarding"),
+    };
+  } catch {
+    return { ok: false, version: null, hasBoards: false, hasOnboarding: false };
+  }
+}

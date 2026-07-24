@@ -101,7 +101,7 @@ function LoginCard({ onSwitch }) {
 }
 
 function SignupCard({ onSwitch }) {
-  const { signup } = useAuth();
+  const { signupAndLogin } = useAuth();
   const toast = useToast();
   const [form, setForm] = useState({ email: "", password: "", nickname: "" });
   const [error, setError] = useState("");
@@ -116,9 +116,8 @@ function SignupCard({ onSwitch }) {
     setError("");
     setLoading(true);
     try {
-      await signup(form.email, form.password, form.nickname);
-      toast("회원가입이 완료되었습니다. 로그인해주세요.", "ok");
-      onSwitch();
+      const user = await signupAndLogin(form.email, form.password, form.nickname);
+      toast(`${user.nickname}님, 환영합니다!`, "ok");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "회원가입에 실패했습니다");
     } finally {
