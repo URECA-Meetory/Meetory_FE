@@ -1,129 +1,228 @@
 # Meetory Frontend
 
-![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
-![SpringBoot](https://img.shields.io/badge/API-SpringBoot-6DB33F)
-![License](https://img.shields.io/badge/Project-URECA-blue)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)
+![SpringBoot](https://img.shields.io/badge/API-SpringBoot-6DB33F?logo=springboot&logoColor=white)
+![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?logo=mysql&logoColor=white)
 
 > **Meetory (Meetup + Story)**  
-> 관심사가 같은 사람들과 모임을 만들고, 참여하며 새로운 이야기를 만들어가는 커뮤니티 플랫폼입니다.
+> 관심사가 같은 사람들과 모임을 만들고 참여하며 새로운 이야기를 만들어가는 커뮤니티 플랫폼입니다.
 
-React(Vite) 기반의 Meetory Frontend입니다.  
-Spring Boot Backend와 REST API를 통해 통신하며 모임 생성, 참여, 로그인, 마이페이지 등의 기능을 제공합니다.
+React + Vite 기반으로 개발된 Frontend 프로젝트이며 Spring Boot Backend와 REST API를 통해 통신합니다.
+
+---
+
+# 📌 목차
+
+- 프로젝트 소개
+- 기술 스택
+- 주요 기능
+- 프로젝트 구조
+- 실행 방법
+- API 연동
+- 인증 방식
+- 팀원 소개
+- 향후 개발 계획
+
+---
+
+# 프로젝트 소개
+
+Meetory는 관심사가 같은 사람들을 연결해주는 모임 플랫폼입니다.
+
+사용자는
+
+- 회원가입
+- 로그인
+- 온보딩
+- 모임 생성
+- 모임 참여
+- 게시판 이용
+- 모임 관리
+- 마이페이지
+- 쪽지 기능
+
+등을 사용할 수 있습니다.
 
 ---
 
 # Tech Stack
 
-### Frontend
+## Frontend
 
-- React
-- Vite
+- React 19
+- Vite 8
 - JavaScript (ES6+)
 - Context API
-- CSS
+- Fetch API
+- CSS3
+- Lucide React
 
-### Backend
+## Backend
 
 - Spring Boot
 - Spring Security
 - JPA
 - MySQL
+- JWT
 
 ---
+
 # 주요 기능
 
-## 로그인 / 회원가입
+## 🔐 로그인 / 회원가입
 
 - 회원가입
 - 로그인
-- JWT Access Token 저장
-- 자동 로그인 상태 유지
+- JWT 인증
+- 자동 로그인
 - 로그아웃
-
 
 ---
 
-## 모임 모집
+## 👤 온보딩
+
+최초 로그인 이후
+
+- 나이 입력
+- 성별 선택
+- 관심사 선택
+
+사용자 정보를 입력할 수 있습니다.
+
+---
+
+## 🏠 메인 화면
+
+- Hero Banner
+- 서비스 소개
+- 모임 바로가기
+
+---
+
+## 👥 모임 모집
 
 - 모임 목록 조회
 - 카테고리 필터
 - 모임 생성
-- 상세 조회
-- 팀원 목록 조회
-- 정원 게이지 표시
+- 모임 상세 조회
+- 팀원 조회
+- 모집 인원 Gauge
 - 모임 신청
 
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/227d55fe-1091-4c92-baf5-e8bda15188fa" width="49%">
+<img src="https://github.com/user-attachments/assets/57aa874c-e25e-4220-87d1-797dacef748b" width="49%">
+</p>
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/ae4cda00-0f34-419f-80c9-69307b8e7496" width="49%">
+</p>
 
 ---
 
-## 게시판
+## ⚙️ 모임 관리
 
-현재 UI만 구성되어 있으며 추후 구현 예정입니다.
+리더 전용 기능
+
+- 신청자 조회
+- 신청 승인
+- 신청 거절
+- 현재 팀원 조회
+- 팀 관리 페이지
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/db98d4dd-e169-4d79-a251-01772789781c" width="49%">
+<img src="https://github.com/user-attachments/assets/164236c2-134d-4bf0-8be4-9f5bb6b7771e" width="49%">
+</p>
 
 ---
 
-## 모임 모집
-- 리더 전용 신청 승인 / 거절
-- 현재 내가 속한 모임 조회
+## 📝 게시판
 
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/db98d4dd-e169-4d79-a251-01772789781c" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/164236c2-134d-4bf0-8be4-9f5bb6b7771e" />
+- 게시글 목록
+- 게시글 작성
+- 게시글 상세 조회
+
+(Backend API 연동 진행 중)
 
 ---
-## 마이페이지 & 쪽지함
 
-- 로그인한 사용자 정보 조회
+## 💬 마이페이지 / 쪽지
+
+- 내 정보 조회
 - 로그아웃
-- 안 읽은 쪽지
 - 읽은 쪽지
-- 쪽지 송신 및 수신 기능
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/24cceae5-727b-460e-9f2e-bf3dcbadc98d" />
-<img width="1900" height="900" alt="image" src="https://github.com/user-attachments/assets/abe46b35-f215-4e0a-ae3b-245b7cfdaabc" />
+- 안 읽은 쪽지
+- 쪽지 송수신
 
----
-## 👥 팀 구성
-
-### 👤 이수현
-- **담당**
-  - 로그인
-  - 회원가입
-  - 마이페이지(개인정보)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/24cceae5-727b-460e-9f2e-bf3dcbadc98d" width="49%">
+<img src="https://github.com/user-attachments/assets/abe46b35-f215-4e0a-ae3b-245b7cfdaabc" width="49%">
+</p>
 
 ---
 
-### 👤 정문구
-- **담당**
-  - 게시판
+# 프로젝트 구조
+
+```
+src
+│
+├── api
+│   └── client.js
+│
+├── assets
+│
+├── components
+│   ├── BoardDetailModal.jsx
+│   ├── CreateBoardModal.jsx
+│   ├── CreateTeamModal.jsx
+│   ├── Gauge.jsx
+│   ├── Modal.jsx
+│   ├── TeamCard.jsx
+│   ├── TeamDetailModal.jsx
+│   ├── TeamManageModal.jsx
+│   └── UserMenu.jsx
+│
+├── context
+│   ├── AuthContext.jsx
+│   └── ToastContext.jsx
+│
+├── pages
+│   ├── AuthPage.jsx
+│   ├── BoardPage.jsx
+│   ├── MyPage.jsx
+│   ├── OnboardingPage.jsx
+│   ├── TeamManagePage.jsx
+│   └── TeamMatchPage.jsx
+│
+├── styles
+│   ├── global.css
+│   └── tokens.css
+│
+├── App.jsx
+├── main.jsx
+└── vite.config.js
+```
 
 ---
 
-### 👤 조성원
-- **담당**
-  - 메인 화면
-  - 모임 모집
-  - 모임 관리
-  - 마이페이지(쪽지함)
-  
----
 # 실행 방법
 
-## 1. 프로젝트 설치
+## 프로젝트 설치
 
 ```bash
 npm install
 ```
 
-## 2. 개발 서버 실행
+## 개발 서버 실행
 
 ```bash
 npm run dev
 ```
 
-개발 서버
+브라우저
 
 ```
 http://localhost:5173
@@ -133,7 +232,7 @@ http://localhost:5173
 
 # Backend 실행
 
-먼저 Spring Boot 서버를 실행합니다.
+Spring Boot 서버 실행
 
 ```
 MeetoryApplication
@@ -149,21 +248,27 @@ http://localhost:8080
 
 # API Proxy
 
-프론트에서는 `/api`로 시작하는 요청을 자동으로 Spring Boot 서버로 전달합니다.
+Frontend
 
 ```
 /api/**
-        ↓
+```
+
+↓
+
+Backend
+
+```
 http://localhost:8080
 ```
 
-별도의 CORS 설정 없이 개발 가능합니다.
-
-백엔드 주소를 변경하려면
+Backend 주소 변경
 
 ```bash
 VITE_API_TARGET=http://localhost:9090 npm run dev
 ```
+
+---
 
 # API 연동
 
@@ -172,14 +277,16 @@ VITE_API_TARGET=http://localhost:9090 npm run dev
 | 회원가입 | POST | `/api/auth/signup` |
 | 로그인 | POST | `/api/auth/login` |
 | 로그아웃 | POST | `/api/auth/logout` |
+| 온보딩 | POST | `/api/users/onboarding` |
 | 모임 목록 | GET | `/api/teams` |
-| 모임 상세 | GET | `/api/teams/{teamId}` |
 | 모임 생성 | POST | `/api/teams` |
+| 모임 상세 | GET | `/api/teams/{teamId}` |
 | 모임 신청 | POST | `/api/teams/{teamId}/apply` |
 | 팀원 조회 | GET | `/api/teams/{teamId}/members` |
-| 신청 목록 | GET | `/api/teams/{teamId}/applications` |
 | 신청 승인 | POST | `/api/teams/{teamId}/applications/{memberId}/approve` |
 | 신청 거절 | POST | `/api/teams/{teamId}/applications/{memberId}/reject` |
+| 게시글 목록 | GET | `/api/boards` |
+| 게시글 작성 | POST | `/api/boards` |
 
 ---
 
@@ -193,90 +300,55 @@ userId
 nickname
 ```
 
-를 `localStorage`에 저장합니다.
+을 LocalStorage에 저장합니다.
 
-이후 모든 인증이 필요한 요청에는
+인증이 필요한 요청은
 
 ```
 Authorization: Bearer {accessToken}
 ```
 
-헤더가 자동으로 추가됩니다.
-
-관련 코드는
-
-```
-src/api/client.js
-```
-
-에서 관리합니다.
-
----
-
-# 프로젝트 구조
-
-```
-src
-│
-├── api
-│   └── client.js
-│
-├── assets
-│
-├── components
-│   ├── CreateTeamModal.jsx
-│   ├── Gauge.jsx
-│   ├── Modal.jsx
-│   ├── TeamCard.jsx
-│   └── TeamDetailModal.jsx
-│
-├── context
-│   ├── AuthContext.jsx
-│   └── ToastContext.jsx
-│
-├── pages
-│   ├── AuthPage.jsx
-│   ├── BoardPage.jsx
-│   ├── MyPage.jsx
-│   └── TeamMatchPage.jsx
-│
-├── styles
-│   ├── global.css
-│   └── tokens.css
-│
-├── App.jsx
-├── main.jsx
-└── vite.config.js
-```
+헤더를 자동으로 추가합니다.
 
 ---
 
 # 프로젝트 특징
 
-- React Context를 이용한 로그인 상태 관리
-- Fetch Wrapper를 이용한 API 통신
-- JWT 기반 인증
-- Toast 알림 시스템
-- 공용 Modal 컴포넌트
-- 정원 Gauge UI
-- 잡코리아 스타일의 모임 리스트 UI
+- React Context 기반 인증 관리
+- JWT 인증 방식
+- Fetch API Wrapper
+- 공통 Modal 컴포넌트
+- Toast 알림
+- Gauge UI
 - 반응형 레이아웃
+- Hero Banner
+- User Menu
+- 재사용 가능한 컴포넌트 구조
+
+---
+
+# 👥 팀원
+
+| 이름 | 담당 |
+|------|------|
+| **이수현** | 로그인 / 회원가입 / 온보딩 / 마이페이지(개인정보) |
+| **정문구** | 게시판 |
+| **조성원** | 메인 화면 / 모임 모집 / 모임 관리 / 마이페이지(쪽지함) |
 
 ---
 
 # 향후 개발 계획
 
-- 게시판 CRUD
+- 게시판 CRUD 고도화
 - 댓글 기능
-- 내가 만든 모임
-- 내가 신청한 모임
-- 프로필 수정
-- Refresh Token 적용
-- Access Token 자동 재발급
-- 이미지 업로드
 - 검색 기능
+- 이미지 업로드
+- Refresh Token
+- Access Token 자동 재발급
+- 실시간 알림
 - 무한 스크롤
-- 알림 기능
+- 프로필 수정
+- 모임 추천 기능
 
 ---
 
@@ -284,8 +356,9 @@ src
 
 | 항목 | 버전 |
 |------|------|
-| Node.js | 20+ 권장 |
+| Node.js | 20+ |
 | npm | 10+ |
-| React | Vite 기반 |
+| React | 19 |
+| Vite | 8 |
 | Backend | Spring Boot |
 | Database | MySQL |
