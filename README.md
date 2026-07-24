@@ -35,6 +35,8 @@
 | 게시판 | 게시글 목록/작성/상세 |
 | 마이페이지 | 로그인된 유저 정보, 닉네임/비밀번호 변경, 받은 쪽지함(안읽음/읽음), 로그아웃 |
 
+---
+
 ## 프로젝트 구조
 
 ```
@@ -77,6 +79,8 @@ src
 └── vite.config.js
 ```
 
+---
+
 ## 실행 방법
 
 ### 사전 준비
@@ -106,6 +110,8 @@ npm run preview   # 빌드 결과 미리보기
 npm run lint       # oxlint 실행
 ```
 
+---
+
 ## API 연동
 
 `src/api/client.js`가 모든 백엔드 호출을 도메인별(`authApi`, `userApi`, `teamApi`, `messageApi`, `boardApi`)로 모아둔 fetch 래퍼입니다. 백엔드 공통 응답 규격 `ApiResponse<T> = { success, message, data }`를 그대로 사용하며, 실패 시 `ApiResponse.message`를 담은 `ApiError`를 던집니다.
@@ -124,12 +130,16 @@ npm run lint       # oxlint 실행
 | 쪽지함 조회 | GET | `/api/messages/threads` |
 | 게시글 목록 / 작성 | GET / POST | `/api/boards` |
 
+---
+
 ## 인증 방식
 
 - 로그인 성공 시 응답으로 받은 `accessToken`, `userId`, `nickname`을 `localStorage`에 저장합니다.
 - 인증이 필요한 요청에는 `Authorization: Bearer {accessToken}` 헤더가 `api/client.js`에서 자동으로 추가됩니다.
 - `AuthContext`가 앱 전역의 로그인 상태를 관리하며, 로그인 시마다 팀 매칭 탭으로 자동 이동하도록 처리되어 있습니다.
 - 로그아웃 시 백엔드 로그아웃 API 호출과 별개로 클라이언트 세션(`localStorage`)은 항상 정리됩니다.
+
+---
 
 ## 주요 컴포넌트 / 페이지 설명
 
@@ -140,6 +150,8 @@ npm run lint       # oxlint 실행
 - **`components/TeamDetailModal.jsx` / `TeamManageModal.jsx`** — 모임 상세 열람과 리더의 신청 관리(승인/거절)를 각각 담당
 - **`pages/OnboardingPage.jsx`** — 최초 로그인 사용자에게 노출되는 추가 정보 입력 화면
 
+---
+
 ## 프론트엔드 특징
 
 - React Context 기반 인증/토스트 상태 관리
@@ -148,6 +160,8 @@ npm run lint       # oxlint 실행
 - 공통 Modal 컴포넌트 및 재사용 가능한 UI(Gauge, Toast 등)
 - 잡코리아 공고 스타일의 패널형 모임 목록 UI
 - 반응형 레이아웃
+
+---
 
 ## 개발 환경
 
